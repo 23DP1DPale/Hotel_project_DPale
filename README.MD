@@ -5,4 +5,6 @@ Pārvaldnieks spēj pārvaldīt numuru rezervācijas, pieejamību, cenas un arī
 
 ### Interfeiss
 
+Galvenais logs ļauj izvēlēties 2 lomas: pārvaldnieku vai viesi.
+
 ### Funkcijas
