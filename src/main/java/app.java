@@ -6,15 +6,23 @@ public class app {
         if (showMenu().matches("(G|g)uest")) {
             System.out.print("Enter your name: ");
             String name = scanner.nextLine();
-            Guest guest = new Guest(name);
+            Guest guest = new Guest(name, 0);
             System.out.println("Welcome " + name);
             guest.showOptions();
             String option = scanner.nextLine();
             while (option.matches("(E|e)xit") == false) {
-                
+                if ()
             }
         } else {
-            System.out.println("Welcome administrator");
+            System.out.print("Enter your name: ");
+            String name = scanner.nextLine();
+            Admin admin = new Admin(name);
+            System.out.println("Welcome " + admin.getName());
+            admin.showOptions();
+            String option = scanner.nextLine();
+            while (option.matches("(E|e)xit") == false) {
+                
+            }
         }
     }
 
