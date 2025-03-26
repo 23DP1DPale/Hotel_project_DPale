@@ -4,7 +4,6 @@ public class Booking {
     public int days;
     public double totalCost;
     
-
     public Booking(String name, String room, int days, double totalCost) {
         this.guest = name;
         this.room = room;

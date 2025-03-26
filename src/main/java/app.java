@@ -2,34 +2,18 @@ import java.util.*;
 
 public class app {
     public static void main(String[] args) throws Exception{
-        Scanner scanner = new Scanner(System.in);
-        if (showMenu().matches("(G|g)uest")) {
-            System.out.print("Enter your name: ");
-            String name = scanner.nextLine();
-            Guest guest = new Guest(name, 0);
-            System.out.println("Welcome " + name);
-            guest.showOptions();
-            String option = scanner.nextLine();
-            while (option.matches("(E|e)xit") == false) {
-                if ()
-            }
+        if (showMenu().equalsIgnoreCase("guest")) {
+            Guest guest = new Guest(null, 0);
+            guest.guest();
         } else {
-            System.out.print("Enter your name: ");
-            String name = scanner.nextLine();
-            Admin admin = new Admin(name);
-            System.out.println("Welcome " + admin.getName());
-            admin.showOptions();
-            String option = scanner.nextLine();
-            while (option.matches("(E|e)xit") == false) {
-                
-            }
+            Admin admin = new Admin(null);
+            admin.admin();
         }
     }
 
     public static String showMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < 45; i++) {
-            Thread.sleep(25);
             System.out.print(ConsoleColors.GREEN_BACKGROUND + " ");
         }
         System.out.println(ConsoleColors.RESET);
@@ -41,17 +25,18 @@ public class app {
                         "|  | |  ||       |  |   |  |   |___ |       |\n" +
                         "|__| |__||_______|  |___|  |_______||_______|\n");
         for (int i = 0; i < 45; i++) {
-            Thread.sleep(25);
             System.out.print(ConsoleColors.GREEN_BACKGROUND + " ");
         }
         System.out.println(ConsoleColors.RESET + "\n");
         System.out.print("Choose your role (admin or guest): ");
         String answer = scanner.nextLine();
         while (true) {
-            if (answer.matches("(A|a)dmin") || answer.matches("(G|g)uest")) {
+            if (answer.equalsIgnoreCase("admin") || answer.equalsIgnoreCase("guest")) {
                 break;
             } else {
+                System.out.print(ConsoleColors.RED);
                 System.out.print("Incorrect input, try again: ");
+                System.out.print(ConsoleColors.RESET);
                 answer = scanner.nextLine();
             }
         } 

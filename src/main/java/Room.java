@@ -83,6 +83,7 @@ public class Room {
     public void showRooms() throws Exception{
         HashMap<String, Room> roomList = new HashMap<>();
         System.out.println("Room, type, size, cost, available, discount, guest");
+        roomList = getRoomsList();
         for (int i = 0; i < roomList.size(); i++) {
             System.out.println(roomList.get("00" + String.valueOf(i)));
         }
