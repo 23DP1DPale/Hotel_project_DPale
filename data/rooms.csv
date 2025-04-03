@@ -1,2 +1,2 @@
-Room, type, size, cost, available, discount, guest
-001, double, 225, 50, yes, 10, Michael
+Room, type, size, cost, discount, available, guest
+1, double, 225.0, 50.0, 10.0, true, Michael

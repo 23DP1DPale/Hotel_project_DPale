@@ -29,11 +29,13 @@ public class Admin {
             showOptions();
             int option = Integer.valueOf(scanner.nextLine());
             while (option != 4) {
+                checkOption(option);
+                showOptions();
                 option = Integer.valueOf(scanner.nextLine());
             }
     }
 
-    public void checkOption(int option) throws Exception{
+    public void checkOption(int option) {
         if (option == 1) {
             changeCost();
         } else if (option == 2) {

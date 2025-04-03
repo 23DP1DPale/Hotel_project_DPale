@@ -4,6 +4,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 
 public class Room {
+    private int number;
     private String type;
     private double size;
     private double cost;
@@ -11,13 +12,14 @@ public class Room {
     private String guest;
     private double discount;
 
-    public Room(String type, double size, double cost, double discount, boolean available, String guest) {
+    public Room(int number, String type, double size, double cost, double discount, boolean available, String guest) {
+        this.number = number;
         this.type = type;
         this.size = size;
         this.cost = cost;
         this.available = available;
-        this.discount = 0;
-        this.guest = null;
+        this.discount = discount;
+        this.guest = guest;
     }
 
     public String getType() {
@@ -56,17 +58,17 @@ public class Room {
         discount = newDiscount;
     }
 
-    public static HashMap<String, Room> getRoomsList() throws Exception {
+    public static HashMap<Integer, Room> getRoomsList() throws Exception {
         BufferedReader reader = Helper.gerReader("rooms.csv");
 
-        HashMap<String, Room> roomList = new HashMap<>();
+        HashMap<Integer, Room> roomList = new HashMap<>();
         String line;
 
         reader.readLine();       
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(", ");
 
-            String number = parts[0];
+            int number = Integer.valueOf(parts[0]);
             String type = parts[1];
             double size = Double.valueOf(parts[2]);
             double cost = Double.valueOf(parts[3]);
@@ -74,18 +76,24 @@ public class Room {
             boolean available = Boolean.valueOf(parts[5]);
             String guest = parts[6];
 
-            Room room = new Room(type, size, cost, discount, available, guest);
+            Room room = new Room(number, type, size, cost, discount, available, guest);
             roomList.put(number, room);
         }
         return roomList;
     }
 
-    public void showRooms() throws Exception{
-        HashMap<String, Room> roomList = new HashMap<>();
-        System.out.println("Room, type, size, cost, available, discount, guest");
-        roomList = getRoomsList();
-        for (int i = 0; i < roomList.size(); i++) {
-            System.out.println(roomList.get("00" + String.valueOf(i)));
+    public String toCsvRow() {
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + " EUR, " + this.discount + " %, " + this.available;
+    }
+
+    public static void printRooms() throws Exception{
+        HashMap<Integer, Room> rooms = getRoomsList();
+        System.out.println("=============================================");
+        System.out.println("Room, type, size, cost, discount, available");
+        System.out.println("=============================================");
+        for (Room room: rooms.values()) {
+            System.out.println(room.toCsvRow());
         }
+        System.out.println("=============================================\n");
     }
 }

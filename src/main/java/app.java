@@ -3,7 +3,7 @@ import java.util.*;
 public class app {
     public static void main(String[] args) throws Exception{
         if (showMenu().equalsIgnoreCase("guest")) {
-            Guest guest = new Guest(null, 0);
+            Guest guest = new Guest(null, 0.0);
             guest.guest();
         } else {
             Admin admin = new Admin(null);
