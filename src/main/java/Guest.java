@@ -1,5 +1,10 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Console;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,8 +17,6 @@ public class Guest {
         this.name = name;
         this.balance = balance;
     }
-
-    
 
     public void guest() throws Exception{
         Scanner scanner = new Scanner(System.in);
@@ -33,7 +36,7 @@ public class Guest {
             System.out.print("Input: ");
             int option = Integer.valueOf(scanner.nextLine());
             while (option != 4) {
-                checkOption(option);
+                checkOption(guest, option);
                 showOptions();
                 System.out.print("Input: ");
                 option = Integer.valueOf(scanner.nextLine());
@@ -48,7 +51,7 @@ public class Guest {
         System.out.println("4) Exit\n");
     }
 
-    public void checkOption(int option) throws Exception {
+    public void checkOption(Guest guest, int option) throws Exception {
         Scanner scanner = new Scanner(System.in);
         if (option == 1) {
             book();
@@ -57,7 +60,7 @@ public class Guest {
             showRooms();
             System.out.println("\n");
         } else if (option == 3) {
-            checkBalance();
+            checkBalance(guest);
         }
     }
 
@@ -72,39 +75,44 @@ public class Guest {
         Scanner scanner = new Scanner(System.in);
         Room.printRooms();
         System.out.println("1) Exit");
+        System.out.println("Input: ");
         int input = Integer.valueOf(scanner.nextLine());
         checkInput(input, 1, 1);
     }
 
-
-    public void checkBalance() {
+    public void checkBalance(Guest guest) {
         Scanner scanner = new Scanner(System.in);
         int answer = 0;
         while (answer != 3) {
-            System.out.println("\nYour balance: " + balance + " EUR");
+            System.out.println("\nYour balance: " + guest.balance + " EUR");
             System.out.println("\nWould you like to:");
             System.out.println("1) Deposit money");
             System.out.println("2) Withdraw money");
             System.out.println("3) Exit\n");
             System.out.print("input: ");
                 try {
-                    answer = checkInput(answer, 1, 3);
+                    answer = Integer.valueOf(scanner.nextLine());
+                    checkInput(answer, 1, 3);
+                    Guest oldGuest = new Guest(guest.name, guest.balance);
                     if (answer == 1) {
                         System.out.print("How much would you like to deposit?: ");
                         double deposit = Double.valueOf(scanner.nextLine());
-                        deposit(deposit);
+                        guest.deposit(deposit);
+                        Guest newGuest = new Guest(guest.name, guest.balance);
+                        updateBalance(guest.name, oldGuest.balance, newGuest.balance);
                     } else if (answer == 2) {
                         System.out.print("How much would you like to withdraw?: ");
                         double withdraw = Double.valueOf(scanner.nextLine());
-                        withdraw(withdraw);
-                    }  
+                        guest.withdraw(withdraw);
+                        Guest newGuest = new Guest(guest.name, guest.balance);
+                        updateBalance(guest.name, oldGuest.balance, newGuest.balance);
+                    }
                 } catch (Exception e) {
                     System.out.print(ConsoleColors.RED);
                     System.out.println("Try again");
                     System.out.print(ConsoleColors.RESET);
                     answer = checkInput(answer, 1, 3);
                 }
-                
         }
     }
 
@@ -122,7 +130,7 @@ public class Guest {
 
     public void deposit(double money) {
         if (money > 0.0) {
-            balance =+ money;
+            balance += money;
         } else {
             System.out.print(ConsoleColors.RED);
             System.out.println("Input must be above 0.0");
@@ -131,8 +139,8 @@ public class Guest {
     }
 
     public void withdraw(double money) {
-        if (balance - money > 0.0) {
-            balance =- money;
+        if ((balance - money) > 0.0) {
+            balance -= money;
         } else {
             System.out.print(ConsoleColors.RED);
             System.out.println("Can't withdraw because don't have that much money");
@@ -158,7 +166,7 @@ public class Guest {
     }
 
     public String toCsvRow() {
-        return "\n" + this.name + ", " + this.balance;
+        return this.name + ", " + this.balance + "\n";
     }
 
     public int checkInput(int input, int start, int end) {
@@ -177,5 +185,33 @@ public class Guest {
             }
         }
         return input;
+    }
+
+    public static void updateBalance(String name, double oldBalance, double newBalance) throws Exception{
+        File oldFile = new File("/workspaces/Hotel_project_DPale/data/guests.csv");
+        File tempFile = new File("/workspaces/Hotel_project_DPale/data/tempguests.csv");
+        tempFile.createNewFile();
+        
+        BufferedReader reader = Helper.gerReader("guests.csv");
+        BufferedWriter writer =
+
+        Helper.getWriter("tempguests.csv", StandardOpenOption.APPEND);
+        String linetoupdate = name + ", " + oldBalance;
+        String currentLine;
+
+        while((currentLine = reader.readLine()) != null) {
+            // trim newline when comparing with lineToRemove
+            String trimmedLine = currentLine.trim();
+            if(trimmedLine.equals(linetoupdate)) {
+                writer.write(name + ", " + newBalance + "\n");
+                continue;
+            }
+            
+            writer.write(currentLine + "\n");
+            
+        }
+        writer.close(); 
+        reader.close();
+        boolean successful = tempFile.renameTo(oldFile);
     }
 }

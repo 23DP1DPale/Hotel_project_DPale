@@ -6,13 +6,13 @@ import java.util.HashMap;
 public class Room {
     private int number;
     private String type;
-    private double size;
-    private double cost;
+    private int size;
+    private int cost;
     private boolean available;
     private String guest;
-    private double discount;
+    private int discount;
 
-    public Room(int number, String type, double size, double cost, double discount, boolean available, String guest) {
+    public Room(int number, String type, int size, int cost, int discount, boolean available, String guest) {
         this.number = number;
         this.type = type;
         this.size = size;
@@ -26,11 +26,11 @@ public class Room {
         return type;
     }
 
-    public double getSize() {
+    public int getSize() {
         return size;
     }
 
-    public double getCost() {
+    public int getCost() {
         return cost;
     }
 
@@ -42,7 +42,7 @@ public class Room {
         return guest;
     }
 
-    public void setCost(double newCost) {
+    public void setCost(int newCost) {
         cost = newCost;
     }
 
@@ -54,7 +54,7 @@ public class Room {
         available = availability;
     }
 
-    public void setDiscount(double newDiscount) {
+    public void setDiscount(int newDiscount) {
         discount = newDiscount;
     }
 
@@ -70,9 +70,9 @@ public class Room {
 
             int number = Integer.valueOf(parts[0]);
             String type = parts[1];
-            double size = Double.valueOf(parts[2]);
-            double cost = Double.valueOf(parts[3]);
-            double discount = Double.valueOf(parts[4]);
+            int size = Integer.valueOf(parts[2]);
+            int cost = Integer.valueOf(parts[3]);
+            int discount = Integer.valueOf(parts[4]);
             boolean available = Boolean.valueOf(parts[5]);
             String guest = parts[6];
 
@@ -83,17 +83,21 @@ public class Room {
     }
 
     public String toCsvRow() {
-        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + " EUR, " + this.discount + " %, " + this.available;
+        return this.number + ") " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, " + this.available;
     }
 
     public static void printRooms() throws Exception{
         HashMap<Integer, Room> rooms = getRoomsList();
+        System.out.print(ConsoleColors.BLUE);
         System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
         System.out.println("Room, type, size, cost, discount, available");
+        System.out.print(ConsoleColors.BLUE);
         System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
         for (Room room: rooms.values()) {
             System.out.println(room.toCsvRow());
+            System.out.println("=============================================");
         }
-        System.out.println("=============================================\n");
     }
 }
