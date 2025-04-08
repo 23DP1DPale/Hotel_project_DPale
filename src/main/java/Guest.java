@@ -54,7 +54,7 @@ public class Guest {
     public void checkOption(Guest guest, int option) throws Exception {
         Scanner scanner = new Scanner(System.in);
         if (option == 1) {
-            book();
+            book(guest);
         } else if (option == 2) {
             System.out.println("\n");
             showRooms();
@@ -64,11 +64,12 @@ public class Guest {
         }
     }
 
-    public void book() throws Exception {
+    public void book(Guest guest) throws Exception {
         Scanner scanner = new Scanner(System.in);
         Room.printRooms();
         System.out.print("Enter a room number to book it: ");
-        int answer = Integer.valueOf(scanner.nextLine());
+        String answer = scanner.nextLine();
+        Room.updateRoom(answer, guest);
     }
 
     public void showRooms() throws Exception {
@@ -152,7 +153,7 @@ public class Guest {
     public void addGuest(Guest guest) throws Exception {
         BufferedWriter writer =
         Helper.getWriter("guests.csv", StandardOpenOption.APPEND);
-        writer.write(guest.toCsvRow());
+        writer.write(guest.guestToCsvRow());
         writer.close();
     }
 
@@ -165,7 +166,7 @@ public class Guest {
         addGuest(guest);
     }
 
-    public String toCsvRow() {
+    public String guestToCsvRow() {
         return this.name + ", " + this.balance + "\n";
     }
 

@@ -1,18 +1,19 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 
 public class Room {
-    private int number;
+    private String number;
     private String type;
     private int size;
     private int cost;
-    private boolean available;
+    private String available;
     private String guest;
     private int discount;
 
-    public Room(int number, String type, int size, int cost, int discount, boolean available, String guest) {
+    public Room(String number, String type, int size, int cost, int discount, String available, String guest) {
         this.number = number;
         this.type = type;
         this.size = size;
@@ -34,7 +35,7 @@ public class Room {
         return cost;
     }
 
-    public boolean getAvailability() {
+    public String getAvailability() {
         return available;
     }
 
@@ -50,7 +51,7 @@ public class Room {
         guest = newGuest;
     }
 
-    public void setAvailability(boolean availability) {
+    public void setAvailability(String availability) {
         available = availability;
     }
 
@@ -58,22 +59,22 @@ public class Room {
         discount = newDiscount;
     }
 
-    public static HashMap<Integer, Room> getRoomsList() throws Exception {
+    public static HashMap<String, Room> getRoomsList() throws Exception {
         BufferedReader reader = Helper.gerReader("rooms.csv");
 
-        HashMap<Integer, Room> roomList = new HashMap<>();
+        HashMap<String, Room> roomList = new HashMap<>();
         String line;
 
         reader.readLine();       
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(", ");
 
-            int number = Integer.valueOf(parts[0]);
+            String number = parts[0];
             String type = parts[1];
             int size = Integer.valueOf(parts[2]);
             int cost = Integer.valueOf(parts[3]);
             int discount = Integer.valueOf(parts[4]);
-            boolean available = Boolean.valueOf(parts[5]);
+            String available = parts[5];
             String guest = parts[6];
 
             Room room = new Room(number, type, size, cost, discount, available, guest);
@@ -82,12 +83,49 @@ public class Room {
         return roomList;
     }
 
-    public String toCsvRow() {
+    public static void updateRoom(String roomNumber, Guest guest) throws Exception{
+        File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
+        File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
+        tempFile.createNewFile();
+        
+        BufferedReader reader = Helper.gerReader("rooms.csv");
+        BufferedWriter writer =
+
+        Helper.getWriter("temprooms.csv", StandardOpenOption.APPEND);
+        HashMap<String, Room> roomsList = getRoomsList();
+        String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
+        String currentLine;
+
+        while((currentLine = reader.readLine()) != null) {
+            // trim newline when comparing with lineToRemove
+            String trimmedLine = currentLine.trim();
+            if(trimmedLine.equals(linetoupdate)) {
+                writer.write(roomsList.get(roomNumber).roomsToCsvRow("Occupied", guest.getName()) + "\n");
+                continue;
+            }
+            
+            writer.write(currentLine + "\n");
+            
+        }
+        writer.close(); 
+        reader.close();
+        boolean successful = tempFile.renameTo(oldFile);
+    }
+
+    public String roomsToCsvRow(String availability, String name) {
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + name;
+    }
+
+    public String roomsToCsvRow() {
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.available + ", " + this.guest;
+    }
+
+    public String roomsToCsvRowSymb() {
         return this.number + ") " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, " + this.available;
     }
 
     public static void printRooms() throws Exception{
-        HashMap<Integer, Room> rooms = getRoomsList();
+        HashMap<String, Room> rooms = getRoomsList();
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=============================================");
         System.out.print(ConsoleColors.RESET);
@@ -96,7 +134,7 @@ public class Room {
         System.out.println("=============================================");
         System.out.print(ConsoleColors.RESET);
         for (Room room: rooms.values()) {
-            System.out.println(room.toCsvRow());
+            System.out.println(room.roomsToCsvRowSymb());
             System.out.println("=============================================");
         }
     }
