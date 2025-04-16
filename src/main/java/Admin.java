@@ -18,7 +18,7 @@ public class Admin {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
             String name = scanner.nextLine();
-            while (name.length() < 3 || name.matches("[a-zA-Z]+") == false) {
+            while (name.length() < 3 || name.length() > 20 || name.matches("[a-zA-Z]+") == false) {
                 System.out.print(ConsoleColors.RED);
                 System.out.print("Your name has to be at least 3 characters long: ");
                 System.out.print(ConsoleColors.RESET);

@@ -2,8 +2,8 @@ Room, type, size, cost, discount, available, guest
 1, double room, 30, 110, 0, true, none
 2, single room, 20, 74, 0, true, none
 3, suite, 55, 230, 0, true, none
-4, triple room, 35, 129, 0, true, none
-5, junior suite, 45, 166, 0, true, none
+4, triple room, 35, 129, 0, Occupied, Loan
+5, junior suite, 45, 166, 0, Occupied, Loan
 6, double room, 27, 101, 0, true, none
 7, deluxe room, 40, 157, 0, true, none
 8, queen room, 35, 120, 0, true, none

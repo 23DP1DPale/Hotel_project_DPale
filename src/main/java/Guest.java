@@ -21,8 +21,8 @@ public class Guest {
     public void guest() throws Exception{
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
-            String name = scanner.nextLine();
-            while (name.length() < 3 || name.matches("[a-zA-Z]+") == false) {
+        String name = scanner.nextLine();
+            while (name.length() < 3 || name.length() > 20 || name.matches("[a-zA-Z]+") == false) {
                 System.out.print(ConsoleColors.RED);
                 System.out.println("Name has to be at least 3 characters long and without numbers ");
                 System.out.print(ConsoleColors.RESET);
@@ -34,15 +34,16 @@ public class Guest {
             System.out.println("\nWelcome " + name);
             showOptions();
             int option = 0;
-            while (option != 4) {
-                option = checkInput(option, 1, 4);
-                if (option == 4) {
+            while (option != 5) {
+                option = checkInput(option, 1, 5);
+                if (option == 5) {
                     break;
                 }
                 checkOption(guest, option);
                 System.out.println();
                 showOptions();
             }
+            System.out.println("See you soon");
     }
 
     public void showOptions() {
@@ -50,7 +51,8 @@ public class Guest {
         System.out.println("1) Book - book a room for a certain time period");
         System.out.println("2) Rooms - shows all rooms");
         System.out.println("3) Balance - check your balance or deposit money");
-        System.out.println("4) Exit\n");
+        System.out.println("4) Your booked rooms");
+        System.out.println("5) Exit\n");
     }
 
     public void checkOption(Guest guest, int option) throws Exception {
@@ -64,23 +66,29 @@ public class Guest {
         } else if (option == 3) {
             System.out.println("\n");
             checkBalance(guest);
+        } else if (option == 4) {
+            System.out.println("\n");
+            checkBookedRooms(guest);
         }
     }
 
     public void book(Guest guest) throws Exception {
         Scanner scanner = new Scanner(System.in);
         Room.printRooms();
-        System.out.println("Enter a room number to book it");
+        System.out.println("\nEnter a room number to book it");
         System.out.println();
         String answer = "0";
         answer = String.valueOf(checkInput(Integer.valueOf(answer), 1, 10));
         Room.updateRoom(answer, guest);
+        System.out.print(ConsoleColors.GREEN);
+        System.out.println("Succesfuly booked a room");
+        System.out.print(ConsoleColors.RESET);
     }
 
     public void showRooms() throws Exception {
         Scanner scanner = new Scanner(System.in);
         Room.printRooms();
-        System.out.println("1) Exit");
+        System.out.println("\n1) Exit\n");
         int input = 0;
         input = checkInput(input, 1, 1);
     }
@@ -102,21 +110,31 @@ public class Guest {
                         System.out.print("How much would you like to deposit?: ");
                         double deposit = Double.valueOf(scanner.nextLine());
                         guest.deposit(deposit);
+                        System.out.println();
                         Guest newGuest = new Guest(guest.name, guest.balance);
                         updateBalance(guest.name, oldGuest.balance, newGuest.balance);
                     } else if (answer == 2) {
                         System.out.print("How much would you like to withdraw?: ");
                         double withdraw = Double.valueOf(scanner.nextLine());
                         guest.withdraw(withdraw);
+                        System.out.println();
                         Guest newGuest = new Guest(guest.name, guest.balance);
                         updateBalance(guest.name, oldGuest.balance, newGuest.balance);
                     }
                 } catch (Exception e) {
                     System.out.print(ConsoleColors.RED);
-                    System.out.println("Try again");
+                    System.out.println("Incorrect input\n");
                     System.out.print(ConsoleColors.RESET);
                 }
         }
+    }
+
+    public void checkBookedRooms(Guest guest) throws Exception{
+        Scanner scanner = new Scanner(System.in);
+        Room.searchBooked(guest);
+        System.out.println("1) Exit\n");
+        int input = 0;
+        input = checkInput(input, 1, 1);
     }
 
     public void setName(String newName) {
@@ -154,7 +172,7 @@ public class Guest {
     public void addGuest(Guest guest) throws Exception {
         BufferedWriter writer =
         Helper.getWriter("guests.csv", StandardOpenOption.APPEND);
-        writer.write(guest.guestToCsvRow());
+        writer.write(guestToCsvRow(guest));
         writer.close();
     }
 
@@ -167,8 +185,8 @@ public class Guest {
         addGuest(guest);
     }
 
-    public String guestToCsvRow() {
-        return this.name + ", " + this.balance + "\n";
+    public static String guestToCsvRow(Guest guest) {
+        return guest.name + ", " + guest.balance + "\n";
     }
 
     public int checkInput(int input, int start, int end) {
@@ -208,8 +226,8 @@ public class Guest {
         String linetoupdate = name + ", " + oldBalance;
         String currentLine;
 
-        while((currentLine = reader.readLine()) != null) {
-            if(currentLine.equals(linetoupdate)) {
+        while ((currentLine = reader.readLine()) != null) {
+            if (currentLine.equals(linetoupdate)) {
                 writer.write(name + ", " + newBalance + "\n");
                 continue;
             }

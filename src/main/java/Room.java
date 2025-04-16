@@ -112,6 +112,36 @@ public class Room {
         boolean successful = tempFile.renameTo(oldFile);
     }
 
+    public static void searchBooked(Guest guest) throws Exception{
+
+        HashMap<String, Room> roomsList = getRoomsList();
+        int bookedRoomCount = 0;
+        for (Room room: roomsList.values()) {
+            if (room.roomsToCsvRow().equals(room.roomsToCsvRow("Occupied", guest.getName()))) {
+                bookedRoomCount++;
+            }
+        }
+        if (bookedRoomCount == 0) {
+            System.out.println("You don't have any booked rooms yet\n");
+        } else {
+            System.out.println("Your booked rooms");
+            System.out.print(ConsoleColors.BLUE);
+            System.out.println("==================================");
+            System.out.print(ConsoleColors.RESET);
+            System.out.println("Room, type, size, cost, discount");
+            System.out.print(ConsoleColors.BLUE);
+            System.out.println("==================================");
+            System.out.print(ConsoleColors.RESET);
+            for (Room room: roomsList.values()) {
+                if (room.roomsToCsvRow().equals(room.roomsToCsvRow("Occupied", guest.getName()))) {
+                    System.out.println(room.printBookedRooms());
+                    System.out.println("==================================");
+                }
+            }
+            System.out.println();
+        }
+    }
+
     public String roomsToCsvRow(String availability, String name) {
         return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + name;
     }
@@ -121,7 +151,11 @@ public class Room {
     }
 
     public String roomsToCsvRowSymb() {
-        return this.number + ") " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, " + this.available;
+        return this.number + " " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, " + this.available;
+    }
+
+    public String printBookedRooms() {
+        return this.number + " " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, ";
     }
 
     public static void printRooms() throws Exception{
@@ -138,4 +172,5 @@ public class Room {
             System.out.println("=============================================");
         }
     }
+ 
 }
