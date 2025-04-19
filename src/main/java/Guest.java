@@ -51,7 +51,7 @@ public class Guest {
         System.out.println("1) Book - book a room for a certain time period");
         System.out.println("2) Rooms - shows all rooms");
         System.out.println("3) Balance - check your balance or deposit money");
-        System.out.println("4) Your booked rooms");
+        System.out.println("4) See your booked rooms");
         System.out.println("5) Exit\n");
     }
 
@@ -79,10 +79,48 @@ public class Guest {
         System.out.println();
         String answer = "0";
         answer = String.valueOf(checkInput(Integer.valueOf(answer), 1, 10));
-        Room.updateRoom(answer, guest);
-        System.out.print(ConsoleColors.GREEN);
-        System.out.println("Succesfuly booked a room");
-        System.out.print(ConsoleColors.RESET);
+        Boolean success = false;
+        while (true) {
+            if (Booking.checkIfBooked(answer, guest)) {
+                break;
+            }
+            try {
+                System.out.print("For how many nights?: ");
+                int nights = Integer.valueOf(scanner.nextLine());
+                if (nights > 30) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Night count can't be over 30");
+                    System.out.print(ConsoleColors.RESET);
+                    break;
+                }
+                Booking book = new Booking(guest.getName(), answer, nights);
+                System.out.println("Total cost: " + book.getTotalCost());
+                if (book.getTotalCost() <= guest.getBalance()) {
+                    Booking.addBook(book);
+                    Double oldBalance = guest.getBalance();
+                    guest.withdraw(book.getTotalCost());
+                    updateBalance(guest.getName(), oldBalance, guest.getBalance());
+                    success = true;
+                } else {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("\nYou don't have enough money");
+                    System.out.print(ConsoleColors.RESET);
+                    success = false;
+                }
+                break;
+            } catch(Exception e) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Incorrect night count input");
+                System.out.print(ConsoleColors.RESET);
+            }
+        }
+
+        if (success == true) {
+            Room.updateRoom(answer, guest);
+            System.out.print(ConsoleColors.GREEN);
+            System.out.println("Succesfuly booked a room");
+            System.out.print(ConsoleColors.RESET);
+        }
     }
 
     public void showRooms() throws Exception {
@@ -131,7 +169,7 @@ public class Guest {
 
     public void checkBookedRooms(Guest guest) throws Exception{
         Scanner scanner = new Scanner(System.in);
-        Room.searchBooked(guest);
+        Booking.searchBooked(guest);
         System.out.println("1) Exit\n");
         int input = 0;
         input = checkInput(input, 1, 1);
