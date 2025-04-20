@@ -132,9 +132,38 @@ public class Guest {
     public void showRooms() throws Exception {
         Scanner scanner = new Scanner(System.in);
         Room.printRooms();
-        System.out.println("\n1) Exit\n");
-        int input = 0;
-        input = checkInput(input, 1, 1);
+        System.out.println();
+        while (true) {
+            System.out.println("Choose one of the options:");
+            System.out.println("1) Sort");
+            System.out.println("2) Exit");
+            int input = 0;
+            input = checkInput(input, 1, 2);
+            if (input == 1) {
+                System.out.println("Sort by property:");
+                System.out.println("\n1) Cost");
+                System.out.println("2) Size");
+                if ((input = checkInput(input, 1, 2)) == 1) {
+                    System.out.println("\n1) From the most expensive");
+                    System.out.println("2) From the cheapest");
+                    if ((input = checkInput(input, 1, 2)) == 1) {
+                        Room.sortByHighestCost();
+                    } else {
+                        Room.sortByLowestCost();
+                    }
+                } else if (input == 2) {
+                    System.out.println("\n1) From the biggest");
+                    System.out.println("2) From the smallest");
+                    if ((input = checkInput(input, 1, 2)) == 1) {
+                        Room.sortByBiggestSize();
+                    } else {
+                        Room.sortBySmallestSize();
+                    }
+                }
+            } else if (input == 2) {
+                break;
+            }
+        }
     }
 
     public void checkBalance(Guest guest) {

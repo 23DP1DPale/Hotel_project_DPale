@@ -39,6 +39,11 @@ public class Room {
         return size;
     }
 
+    public double getCostWithDiscount() {
+        Double costWithDiscount = Double.valueOf(this.cost) - (Double.valueOf(this.discount) / 100) * Double.valueOf(this.cost);
+        return costWithDiscount;
+    }
+
     public int getCost() {
         return cost;
     }
@@ -140,6 +145,110 @@ public class Room {
         writer.close(); 
         reader.close();
         return success;
+    }
+
+    public static void sortByHighestCost() throws Exception{
+        HashMap<String, Room> roomsList = getRoomsList();
+        for (int i = 1; i <= roomsList.size(); i++) {
+            for (int j=i+1; j <= roomsList.size(); j++) {
+                Room tempI= roomsList.get(String.valueOf(i));
+                Room tempJ= roomsList.get(String.valueOf(j));
+                if (roomsList.get(String.valueOf(i)).getCostWithDiscount() < roomsList.get(String.valueOf(j)).getCostWithDiscount()) {
+                    roomsList.put(String.valueOf(i), tempJ);
+                    roomsList.put(String.valueOf(j), tempI);
+                }
+            }
+        }
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("\n=============================================");
+        System.out.print(ConsoleColors.RESET);
+        System.out.println("Room, type, size, cost, discount, availability");
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+        for (Room room: roomsList.values()) {
+            System.out.println(room.roomsToCsvRowSymb());
+            System.out.println("=============================================");
+        }
+        System.out.println();
+    }
+
+    public static void sortByLowestCost() throws Exception{
+        HashMap<String, Room> roomsList = getRoomsList();
+        for (int i = 1; i <= roomsList.size(); i++) {
+            for (int j=i+1; j <= roomsList.size(); j++) {
+                Room tempI= roomsList.get(String.valueOf(i));
+                Room tempJ= roomsList.get(String.valueOf(j));
+                if (roomsList.get(String.valueOf(i)).getCostWithDiscount() > roomsList.get(String.valueOf(j)).getCostWithDiscount()) {
+                    roomsList.put(String.valueOf(i), tempJ);
+                    roomsList.put(String.valueOf(j), tempI);
+                }
+            }
+        }
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("\n=============================================");
+        System.out.print(ConsoleColors.RESET);
+        System.out.println("Room, type, size, cost, discount, availability");
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+        for (Room room: roomsList.values()) {
+            System.out.println(room.roomsToCsvRowSymb());
+            System.out.println("=============================================");
+        }
+        System.out.println();
+    }
+
+    public static void sortByBiggestSize() throws Exception{
+        HashMap<String, Room> roomsList = getRoomsList();
+        for (int i = 1; i <= roomsList.size(); i++) {
+            for (int j=i+1; j <= roomsList.size(); j++) {
+                Room tempI= roomsList.get(String.valueOf(i));
+                Room tempJ= roomsList.get(String.valueOf(j));
+                if (roomsList.get(String.valueOf(i)).getSize() < roomsList.get(String.valueOf(j)).getSize()) {
+                    roomsList.put(String.valueOf(i), tempJ);
+                    roomsList.put(String.valueOf(j), tempI);
+                }
+            }
+        }
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("\n=============================================");
+        System.out.print(ConsoleColors.RESET);
+        System.out.println("Room, type, size, cost, discount, availability");
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+        for (Room room: roomsList.values()) {
+            System.out.println(room.roomsToCsvRowSymb());
+            System.out.println("=============================================");
+        }
+        System.out.println();
+    }
+
+    public static void sortBySmallestSize() throws Exception{
+        HashMap<String, Room> roomsList = getRoomsList();
+        for (int i = 1; i <= roomsList.size(); i++) {
+            for (int j=i+1; j <= roomsList.size(); j++) {
+                Room tempI= roomsList.get(String.valueOf(i));
+                Room tempJ= roomsList.get(String.valueOf(j));
+                if (roomsList.get(String.valueOf(i)).getSize() > roomsList.get(String.valueOf(j)).getSize()) {
+                    roomsList.put(String.valueOf(i), tempJ);
+                    roomsList.put(String.valueOf(j), tempI);
+                }
+            }
+        }
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("\n=============================================");
+        System.out.print(ConsoleColors.RESET);
+        System.out.println("Room, type, size, cost, discount, availability");
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+        for (Room room: roomsList.values()) {
+            System.out.println(room.roomsToCsvRowSymb());
+            System.out.println("=============================================");
+        }
+        System.out.println();
     }
 
     public String roomsToCsvRow(String availability) {
