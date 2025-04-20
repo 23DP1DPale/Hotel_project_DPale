@@ -93,9 +93,9 @@ public class Booking {
             System.out.println("You have booked this room already");
             System.out.print(ConsoleColors.RESET);
             return true;
-        } else if (lineToCheck.getAvailability().equals("Occupied")){
+        } else if (lineToCheck.getAvailability().equals("occupied") || lineToCheck.getAvailability().equals("unavailable")){
             System.out.print(ConsoleColors.RED);
-            System.out.println("This room is already occupied");
+            System.out.println("This room is not available");
             System.out.print(ConsoleColors.RESET);
             return true;
         } else {
@@ -106,7 +106,7 @@ public class Booking {
     public static void addBook(Booking book) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         for (Room oneRoom: roomsList.values()) {
-            if (oneRoom.getRoomnumber().equals(book.getRoom()) && oneRoom.getAvailability().equals("true")) {
+            if (oneRoom.getRoomnumber().equals(book.getRoom()) && oneRoom.getAvailability().equals("available")) {
                 BufferedWriter writer =
                 Helper.getWriter("book.csv", StandardOpenOption.APPEND);
                 writer.write(bookToCsvRow(book) + "\n");

@@ -9,16 +9,16 @@ public class Room {
     private String type;
     private int size;
     private int cost;
-    private String available;
+    private String availability;
     private String guest;
     private int discount;
 
-    public Room(String number, String type, int size, int cost, int discount, String available, String guest) {
+    public Room(String number, String type, int size, int cost, int discount, String availability, String guest) {
         this.number = number;
         this.type = type;
         this.size = size;
         this.cost = cost;
-        this.available = available;
+        this.availability = availability;
         this.discount = discount;
         this.guest = guest;
     }
@@ -48,7 +48,7 @@ public class Room {
     }
 
     public String getAvailability() {
-        return available;
+        return availability;
     }
 
     public String getGuest() {
@@ -63,8 +63,8 @@ public class Room {
         guest = newGuest;
     }
 
-    public void setAvailability(String availability) {
-        available = availability;
+    public void setAvailability(String newAvailability) {
+        availability = newAvailability;
     }
 
     public void setDiscount(int newDiscount) {
@@ -86,10 +86,10 @@ public class Room {
             int size = Integer.valueOf(parts[2]);
             int cost = Integer.valueOf(parts[3]);
             int discount = Integer.valueOf(parts[4]);
-            String available = parts[5];
+            String availability = parts[5];
             String guest = parts[6];
 
-            Room room = new Room(number, type, size, cost, discount, available, guest);
+            Room room = new Room(number, type, size, cost, discount, availability, guest);
             roomList.put(number, room);
         }
         return roomList;
@@ -113,12 +113,12 @@ public class Room {
         HashMap<String, Room> roomsList = getRoomsList();
         String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
 
-        if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("Occupied", guest.getName()))) {
+        if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName()))) {
             System.out.print(ConsoleColors.RED);
             System.out.println("You have booked this room already");
             System.out.print(ConsoleColors.RESET);
             tempFile.delete();
-        } else if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("Occupied"))) {
+        } else if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied"))) {
             System.out.print(ConsoleColors.RED);
             System.out.println("This room is already occupied");
             System.out.print(ConsoleColors.RESET);
@@ -129,7 +129,7 @@ public class Room {
             while((currentLine = reader.readLine()) != null) {
                 String trimmedLine = currentLine.trim();
                 if(trimmedLine.equals(linetoupdate)) {
-                    writer.write(roomsList.get(roomNumber).roomsToCsvRow("Occupied", guest.getName()) + "\n");
+                    writer.write(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName()) + "\n");
                     continue;
                 }
                 writer.write(currentLine + "\n");
@@ -151,11 +151,17 @@ public class Room {
     }
 
     public String roomsToCsvRow() {
-        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.available + ", " + this.guest;
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.availability + ", " + this.guest;
     }
 
     public String roomsToCsvRowSymb() {
-        return this.number + " " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, " + this.available;
+        Double costWithDiscount = Double.valueOf(this.cost) - (Double.valueOf(this.discount) / 100) * Double.valueOf(this.cost);
+        return this.number + " " + this.type + ", " + this.size + "m², " + costWithDiscount + " EUR, " + this.discount + " %, " + this.availability;
+    }
+
+    public String roomsToCsvRowSymbAdmin() {
+        Double costWithDiscount = Double.valueOf(this.cost) - (Double.valueOf(this.discount) / 100) * Double.valueOf(this.cost);
+        return this.number + " " + this.type + ", " + this.size + "m², " + costWithDiscount + " EUR, " +  this.cost + " EUR, " + this.discount + " %, " + this.availability;
     }
 
     public String printBookedRooms() {
@@ -167,7 +173,7 @@ public class Room {
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=============================================");
         System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, available");
+        System.out.println("Room, type, size, cost, discount, availability");
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=============================================");
         System.out.print(ConsoleColors.RESET);
@@ -176,5 +182,4 @@ public class Room {
             System.out.println("=============================================");
         }
     }
- 
 }

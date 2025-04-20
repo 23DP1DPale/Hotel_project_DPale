@@ -87,6 +87,12 @@ public class Guest {
             try {
                 System.out.print("For how many nights?: ");
                 int nights = Integer.valueOf(scanner.nextLine());
+                if (nights <= 0) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Night count has to be above 0");
+                    System.out.print(ConsoleColors.RESET);
+                    break;
+                }
                 if (nights > 30) {
                     System.out.print(ConsoleColors.RED);
                     System.out.println("Night count can't be over 30");
@@ -118,7 +124,7 @@ public class Guest {
         if (success == true) {
             Room.updateRoom(answer, guest);
             System.out.print(ConsoleColors.GREEN);
-            System.out.println("Succesfuly booked a room");
+            System.out.println("Successfuly booked a room");
             System.out.print(ConsoleColors.RESET);
         }
     }
@@ -227,7 +233,7 @@ public class Guest {
         return guest.name + ", " + guest.balance + "\n";
     }
 
-    public int checkInput(int input, int start, int end) {
+    public static int checkInput(int input, int start, int end) {
         Scanner scanner = new Scanner(System.in);
         input = 0;
         while (true) {
