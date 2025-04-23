@@ -159,12 +159,7 @@ public class Room {
                 }
             }
         }
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("\n=============================================");
-        System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, availability");
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
+        printRoomHeader();
         System.out.print(ConsoleColors.RESET);
         for (Room room: roomsList.values()) {
             System.out.println(room.roomsToCsvRowSymb());
@@ -185,12 +180,7 @@ public class Room {
                 }
             }
         }
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("\n=============================================");
-        System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, availability");
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
+        printRoomHeader();
         System.out.print(ConsoleColors.RESET);
         for (Room room: roomsList.values()) {
             System.out.println(room.roomsToCsvRowSymb());
@@ -211,13 +201,7 @@ public class Room {
                 }
             }
         }
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("\n=============================================");
-        System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, availability");
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
-        System.out.print(ConsoleColors.RESET);
+        printRoomHeader();
         for (Room room: roomsList.values()) {
             System.out.println(room.roomsToCsvRowSymb());
             System.out.println("=============================================");
@@ -225,7 +209,7 @@ public class Room {
         System.out.println();
     }
 
-    public static void sortBySmallestSize() throws Exception{
+    public static void sortBySmallestSize() throws Exception {
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
             for (int j=i+1; j <= roomsList.size(); j++) {
@@ -237,16 +221,46 @@ public class Room {
                 }
             }
         }
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("\n=============================================");
-        System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, availability");
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
-        System.out.print(ConsoleColors.RESET);
+        printRoomHeader();
         for (Room room: roomsList.values()) {
             System.out.println(room.roomsToCsvRowSymb());
             System.out.println("=============================================");
+        }
+        System.out.println();
+    }
+
+    public static void searchByCost(int from, int to) throws Exception {
+        HashMap<String, Room> roomsList = getRoomsList();
+        printRoomHeader();
+        for (Room room: roomsList.values()) {
+            if (from <= room.getCost() && room.getCost() <= to) {
+                System.out.println(room.roomsToCsvRowSymb());
+                System.out.println("=============================================");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void searchBySize(int from, int to) throws Exception {
+        HashMap<String, Room> roomsList = getRoomsList();
+        printRoomHeader();
+        for (Room room: roomsList.values()) {
+            if (from <= room.getSize() && room.getSize() <= to) {
+                System.out.println(room.roomsToCsvRowSymb());
+                System.out.println("=============================================");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void searchByDiscount(int from, int to) throws Exception {
+        HashMap<String, Room> roomsList = getRoomsList();
+        printRoomHeader();
+        for (Room room: roomsList.values()) {
+            if (from <= room.getDiscount() && room.getDiscount() <= to) {
+                System.out.println(room.roomsToCsvRowSymb());
+                System.out.println("=============================================");
+            }
         }
         System.out.println();
     }
@@ -277,15 +291,19 @@ public class Room {
         return this.number + " " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, ";
     }
 
+    public static void printRoomHeader() {
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+        System.out.print("Room, type, size, cost, discount, availability");
+        System.out.print(ConsoleColors.BLUE);
+        System.out.println("=============================================");
+        System.out.print(ConsoleColors.RESET);
+    }
+
     public static void printRooms() throws Exception{
         HashMap<String, Room> rooms = getRoomsList();
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
-        System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost, discount, availability");
-        System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
-        System.out.print(ConsoleColors.RESET);
+        printRoomHeader();
         for (Room room: rooms.values()) {
             System.out.println(room.roomsToCsvRowSymb());
             System.out.println("=============================================");

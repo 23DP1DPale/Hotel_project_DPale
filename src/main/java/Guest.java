@@ -100,7 +100,7 @@ public class Guest {
                     break;
                 }
                 Booking book = new Booking(guest.getName(), answer, nights);
-                System.out.println("Total cost: " + book.getTotalCost());
+                System.out.printf("Total cost: %.2f", book.getTotalCost());
                 if (book.getTotalCost() <= guest.getBalance()) {
                     Booking.addBook(book);
                     Double oldBalance = guest.getBalance();
@@ -136,11 +136,12 @@ public class Guest {
         while (true) {
             System.out.println("Choose one of the options:");
             System.out.println("1) Sort");
-            System.out.println("2) Exit");
+            System.out.println("2) Search");
+            System.out.println("3) Exit");
             int input = 0;
-            input = checkInput(input, 1, 2);
+            input = checkInput(input, 1, 3);
             if (input == 1) {
-                System.out.println("Sort by property:");
+                System.out.println("\nSort by property:");
                 System.out.println("\n1) Cost");
                 System.out.println("2) Size");
                 if ((input = checkInput(input, 1, 2)) == 1) {
@@ -161,7 +162,109 @@ public class Guest {
                     }
                 }
             } else if (input == 2) {
+                System.out.println("\nSearch by");
+                System.out.println("1) Cost");
+                System.out.println("2) Size");
+                System.out.println("3) Discount");
+                if ((input = checkInput(input, 1, 3)) == 1) {
+                    enterRangeOfCost();
+                } else if (input == 2) {
+                    enterRangeOfSize();
+                } else {
+                    enterRangeOfDiscount();
+                }
+            } else if (input == 3) {
                 break;
+            }
+        }
+    }
+
+    public static void enterRangeOfCost() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("\nEnter range of price (EUR)");
+                System.out.print("From: ");
+                int from = Integer.valueOf(scanner.nextLine());
+                System.out.print("To: ");
+                int to = Integer.valueOf(scanner.nextLine());
+                if (from < 0 || to < 0) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Range values cannot be negative");
+                    System.out.print(ConsoleColors.RESET);
+                } else if (from > to) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Starting value cannot be lesser than end value");
+                    System.out.print(ConsoleColors.RESET);
+                } else {
+                    System.out.println();
+                    Room.searchByCost(from, to);
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Incorrect range value\n");
+                System.out.print(ConsoleColors.RESET);
+            }
+        }
+    }
+
+    public static void enterRangeOfSize() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("\nEnter range of size (m²)");
+                System.out.print("From: ");
+                int from = Integer.valueOf(scanner.nextLine());
+                System.out.print("To: ");
+                int to = Integer.valueOf(scanner.nextLine());
+                if (from < 0 || to < 0) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Range values cannot be negative");
+                    System.out.print(ConsoleColors.RESET);
+                } else if (from > to) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Starting value cannot be lesser than end value");
+                    System.out.print(ConsoleColors.RESET);
+                } else {
+                    System.out.println();
+                    Room.searchBySize(from, to);
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Incorrect range value\n");
+                System.out.print(ConsoleColors.RESET);
+            }
+        }
+    }
+
+    public static void enterRangeOfDiscount() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("\nEnter range of discount (%)");
+                System.out.print("From: ");
+                int from = Integer.valueOf(scanner.nextLine());
+                System.out.print("To: ");
+                int to = Integer.valueOf(scanner.nextLine());
+                if (from < 0 || to < 0) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Range values cannot be negative");
+                    System.out.print(ConsoleColors.RESET);
+                } else if (from > to) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Starting value cannot be lesser than end value");
+                    System.out.print(ConsoleColors.RESET);
+                } else {
+                    System.out.println();
+                    Room.searchByDiscount(from, to);
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Incorrect range value\n");
+                System.out.print(ConsoleColors.RESET);
             }
         }
     }
