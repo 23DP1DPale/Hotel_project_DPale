@@ -218,16 +218,16 @@ public class Admin {
         HashMap<String, Room> roomList = Room.getRoomsList();
         ArrayList<String> availableRooms = new ArrayList<>();
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=================================================================");
+        System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost with discount, cost, discount, availability");
+        System.out.printf("%4s %12s %13s %22s %11s %14s %15s\n", "Room", "type", "size", "cost with discount", "cost", "discount", "availability");
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=================================================================");
+        System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);
         for (Room room: roomList.values()) {
             if (room.getAvailability().equals("available") || room.getAvailability().equals("unavailable")) {
-                System.out.println(room.roomsToCsvRowSymbAdmin());
-                System.out.println("=================================================================");
+                room.roomsToCsvRowSymbAdmin();
+                System.out.println("=".repeat(100));
                 availableRooms.add(room.getRoomnumber());
             }
         }
@@ -262,15 +262,15 @@ public class Admin {
     public static void printRooms() throws Exception{
         HashMap<String, Room> rooms = Room.getRoomsList();
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=================================================================");
+        System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);
-        System.out.println("Room, type, size, cost with discount, cost, discount, availability");
+        System.out.printf("%4s %12s %13s %22s %11s %14s %15s\n", "Room", "type", "size", "cost with discount", "cost", "discount", "availability");
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=================================================================");
+        System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);
         for (Room room: rooms.values()) {
-            System.out.println(room.roomsToCsvRowSymbAdmin());
-            System.out.println("=================================================================");
+            room.roomsToCsvRowSymbAdmin();
+            System.out.println("=".repeat(100));
         }
     }
 }

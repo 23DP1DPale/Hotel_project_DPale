@@ -162,8 +162,8 @@ public class Room {
         printRoomHeader();
         System.out.print(ConsoleColors.RESET);
         for (Room room: roomsList.values()) {
-            System.out.println(room.roomsToCsvRowSymb());
-            System.out.println("=============================================");
+            room.roomsToCsvRowSymb();
+            System.out.println("=".repeat(80));
         }
         System.out.println();
     }
@@ -183,8 +183,8 @@ public class Room {
         printRoomHeader();
         System.out.print(ConsoleColors.RESET);
         for (Room room: roomsList.values()) {
-            System.out.println(room.roomsToCsvRowSymb());
-            System.out.println("=============================================");
+            room.roomsToCsvRowSymb();
+            System.out.println("=".repeat(80));
         }
         System.out.println();
     }
@@ -203,8 +203,8 @@ public class Room {
         }
         printRoomHeader();
         for (Room room: roomsList.values()) {
-            System.out.println(room.roomsToCsvRowSymb());
-            System.out.println("=============================================");
+            room.roomsToCsvRowSymb();
+            System.out.println("=".repeat(80));
         }
         System.out.println();
     }
@@ -223,8 +223,8 @@ public class Room {
         }
         printRoomHeader();
         for (Room room: roomsList.values()) {
-            System.out.println(room.roomsToCsvRowSymb());
-            System.out.println("=============================================");
+            room.roomsToCsvRowSymb();
+            System.out.println("=".repeat(80));
         }
         System.out.println();
     }
@@ -234,8 +234,8 @@ public class Room {
         printRoomHeader();
         for (Room room: roomsList.values()) {
             if (from <= room.getCost() && room.getCost() <= to) {
-                System.out.println(room.roomsToCsvRowSymb());
-                System.out.println("=============================================");
+                room.roomsToCsvRowSymb();
+                System.out.println("=".repeat(80));
             }
         }
         System.out.println();
@@ -246,8 +246,8 @@ public class Room {
         printRoomHeader();
         for (Room room: roomsList.values()) {
             if (from <= room.getSize() && room.getSize() <= to) {
-                System.out.println(room.roomsToCsvRowSymb());
-                System.out.println("=============================================");
+                room.roomsToCsvRowSymb();
+                System.out.println("=".repeat(80));
             }
         }
         System.out.println();
@@ -258,8 +258,8 @@ public class Room {
         printRoomHeader();
         for (Room room: roomsList.values()) {
             if (from <= room.getDiscount() && room.getDiscount() <= to) {
-                System.out.println(room.roomsToCsvRowSymb());
-                System.out.println("=============================================");
+                room.roomsToCsvRowSymb();
+                System.out.println("=".repeat(80));
             }
         }
         System.out.println();
@@ -277,14 +277,30 @@ public class Room {
         return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.availability + ", " + this.guest;
     }
 
-    public String roomsToCsvRowSymb() {
+    public void roomsToCsvRowSymb() {
+        String checkAvailability = this.availability;
+        int padding = 27;
+        if (checkAvailability.equals("occupied") || checkAvailability.equals("unavailable")) {
+            checkAvailability = ConsoleColors.RED;
+            padding = 28;
+        } else {
+            checkAvailability = ConsoleColors.GREEN;
+        }
         Double costWithDiscount = Double.valueOf(this.cost) - (Double.valueOf(this.discount) / 100) * Double.valueOf(this.cost);
-        return this.number + " " + this.type + ", " + this.size + "m², " + costWithDiscount + " EUR, " + this.discount + " %, " + this.availability;
+        System.out.printf("%3s  %15s %8dm² %11.2f EUR %6d %% %" + padding +"s\n", this.number, this.type, this.size, costWithDiscount, this.discount, checkAvailability + this.availability + ConsoleColors.RESET);
     }
 
-    public String roomsToCsvRowSymbAdmin() {
+    public void roomsToCsvRowSymbAdmin() {
+        String checkAvailability = this.availability;
+        int padding = 27;
+        if (checkAvailability.equals("occupied") || checkAvailability.equals("unavailable")) {
+            checkAvailability = ConsoleColors.RED;
+            padding = 28;
+        } else {
+            checkAvailability = ConsoleColors.GREEN;
+        }
         Double costWithDiscount = Double.valueOf(this.cost) - (Double.valueOf(this.discount) / 100) * Double.valueOf(this.cost);
-        return this.number + " " + this.type + ", " + this.size + "m², " + costWithDiscount + " EUR, " +  this.cost + " EUR, " + this.discount + " %, " + this.availability;
+        System.out.printf("%3s  %15s %8dm² %13.2f EUR %13d EUR %9d %% %" + padding +"s\n", this.number, this.type, this.size, costWithDiscount, this.cost, this.discount, checkAvailability + this.availability + ConsoleColors.RESET);
     }
 
     public String printBookedRooms() {
@@ -293,11 +309,11 @@ public class Room {
 
     public static void printRoomHeader() {
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
+        System.out.println("=".repeat(80));
         System.out.print(ConsoleColors.RESET);
-        System.out.print("Room, type, size, cost, discount, availability");
+        System.out.printf("%4s %12s %13s %12s %14s %15s", "Room", "type", "size", "cost", "discount", "availability");
         System.out.print(ConsoleColors.BLUE);
-        System.out.println("=============================================");
+        System.out.println("\n" + "=".repeat(80));
         System.out.print(ConsoleColors.RESET);
     }
 
@@ -305,8 +321,8 @@ public class Room {
         HashMap<String, Room> rooms = getRoomsList();
         printRoomHeader();
         for (Room room: rooms.values()) {
-            System.out.println(room.roomsToCsvRowSymb());
-            System.out.println("=============================================");
+            room.roomsToCsvRowSymb();
+            System.out.println("=".repeat(80));
         }
     }
 }
