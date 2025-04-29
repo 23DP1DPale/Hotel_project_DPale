@@ -89,11 +89,13 @@ public class Booking {
         Room lineToCheck = roomsList.get(roomNumber);
 
         if (lineToCheck.getGuest().equals(guest.getName())) {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("You have booked this room already");
             System.out.print(ConsoleColors.RESET);
             return true;
-        } else if (lineToCheck.getAvailability().equals("occupied") || lineToCheck.getAvailability().equals("unavailable")){
+        } else if (lineToCheck.getAvailability().equals("occupied") || lineToCheck.getAvailability().equals("unavailable")) {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("This room is not available");
             System.out.print(ConsoleColors.RESET);
@@ -159,24 +161,24 @@ public class Booking {
         } else {
             System.out.println("Booked rooms");
             System.out.print(ConsoleColors.BLUE);
-            System.out.println("==================================");
+            System.out.println("=".repeat(58));
             System.out.print(ConsoleColors.RESET);
-            System.out.println("Room, type, size, nights, total cost");
+            System.out.printf("%5s %10s %13s %10s %14s\n","Room", "type", "size", "nights", "total cost");
             System.out.print(ConsoleColors.BLUE);
-            System.out.println("==================================");
+            System.out.println("=".repeat(58));
             System.out.print(ConsoleColors.RESET);
             for (Booking book: books) {
                 if (book.getGuestName().equals(guest.getName())) {
-                    System.out.println(book.showBookedRooms());
-                    System.out.println("==================================");
+                    book.showBookedRooms();
+                    System.out.println("=".repeat(58));
                 }
             }
             System.out.println();
         }
     }
 
-    public String showBookedRooms() {
-        return this.room + ", " + this.type + ", " + this.size + "m² , " + this.nights + ", " + this.totalCost + " EUR";
+    public void showBookedRooms() {
+        System.out.printf("%4s %15s %7dm² %7d %13.2f EUR\n", this.room, this.type, this.size, this.nights, this.totalCost);
     }
 
     public static String bookToCsvRow(Booking book) {

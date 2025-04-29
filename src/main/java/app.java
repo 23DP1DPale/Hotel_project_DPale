@@ -13,11 +13,12 @@ public class app {
 
     public static String showMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
+        clearScreen();
         for (int i = 0; i < 45; i++) {
             System.out.print(ConsoleColors.GREEN_BACKGROUND + " ");
         }
-        System.out.println(ConsoleColors.RESET);
-        System.out.println(ConsoleColors.BLUE_BOLD + " __   __  _______  _______  _______  ___     \n" +
+        System.out.print(ConsoleColors.RESET);
+        System.out.println(ConsoleColors.BLUE_BOLD + "\n __   __  _______  _______  _______  ___     \n" +
                         "|  | |  ||       ||       ||       ||   |    \n" +
                         "|  |_|  ||   _   ||_     _||    ___||   |    \n" +
                         "|       ||  | |  |  |   |  |   |___ |   |    \n" +
@@ -41,5 +42,10 @@ public class app {
             }
         } 
         return answer;
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }

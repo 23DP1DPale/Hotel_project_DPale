@@ -119,11 +119,13 @@ public class Room {
         String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
 
         if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName()))) {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("You have booked this room already");
             System.out.print(ConsoleColors.RESET);
             tempFile.delete();
         } else if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied"))) {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("This room is already occupied");
             System.out.print(ConsoleColors.RESET);
@@ -146,7 +148,7 @@ public class Room {
         reader.close();
         return success;
     }
-
+    
     public static void sortByHighestCost() throws Exception{
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
@@ -280,9 +282,12 @@ public class Room {
     public void roomsToCsvRowSymb() {
         String checkAvailability = this.availability;
         int padding = 27;
-        if (checkAvailability.equals("occupied") || checkAvailability.equals("unavailable")) {
+        if (checkAvailability.equals("unavailable")) {
             checkAvailability = ConsoleColors.RED;
             padding = 28;
+        } else if (checkAvailability.equals("occupied")) {
+            checkAvailability = ConsoleColors.RED;
+            padding = 26;
         } else {
             checkAvailability = ConsoleColors.GREEN;
         }

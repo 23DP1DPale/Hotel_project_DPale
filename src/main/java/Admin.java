@@ -30,7 +30,10 @@ public class Admin {
                 System.out.print(ConsoleColors.RESET);
                 name = scanner.nextLine();
             }
+            System.out.print("\033[2J\033[3J\033[H");
+            System.out.flush();
             setName(name);
+            printRooms();
             System.out.println("\nWelcome " + getName());
             showOptions();
             int option = 0;
@@ -40,9 +43,12 @@ public class Admin {
                     break;
                 }
                 checkOption(option);
+                printRooms();
                 System.out.println();
                 showOptions();
             }
+            System.out.print("\033[2J\033[3J\033[H");
+            System.out.flush();
             System.out.println("See you soon");
     }
 
@@ -69,6 +75,7 @@ public class Admin {
 
     public void changeRoomCost() throws Exception{
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         printRooms();
         System.out.println("\nEnter a room number to change its cost");
         String room = "0";
@@ -81,11 +88,16 @@ public class Admin {
                     System.out.print(ConsoleColors.RED);
                     System.out.println("Cost must be above 0");
                     System.out.print(ConsoleColors.RESET);
+                } else if (cost > 1000) {
+                    System.out.print(ConsoleColors.RED);
+                    System.out.println("Cost is too high");
+                    System.out.print(ConsoleColors.RESET);
                 } else {
                     changeCost(room, cost);
-                    System.out.println(ConsoleColors.GREEN);
+                    app.clearScreen();
+                    System.out.print(ConsoleColors.GREEN);
                     System.out.println("Successfully changed cost");
-                    System.out.println(ConsoleColors.RESET);
+                    System.out.print(ConsoleColors.RESET);
                     break;
                 }
             } catch (Exception e) {
@@ -98,6 +110,7 @@ public class Admin {
 
     public void changeRoomAvailability() throws Exception{
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         ArrayList<String> availableRooms = searchAvailable();
         System.out.println("Enter a room number to change its availability state");
         while (true) {
@@ -128,13 +141,15 @@ public class Admin {
                 System.out.print(ConsoleColors.RESET);
             }
         }
-        System.out.println(ConsoleColors.GREEN);
+        app.clearScreen();
+        System.out.print(ConsoleColors.GREEN);
         System.out.println("Successfully changed availability");
-        System.out.println(ConsoleColors.RESET);
+        System.out.print(ConsoleColors.RESET);
     }
 
     public void changeRoomDiscount() throws Exception{
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         printRooms();
         System.out.println("\nEnter a room number to change its discount");
         String room = "0";
@@ -152,15 +167,16 @@ public class Admin {
                     System.out.println("Can't be over 100");
                     System.out.print(ConsoleColors.RESET);
                 } else {
+                    app.clearScreen();
                     changeDiscount(room, discount);
-                    System.out.println(ConsoleColors.GREEN);
+                    System.out.print(ConsoleColors.GREEN);
                     System.out.println("Successfully changed discount");
-                    System.out.println(ConsoleColors.RESET);
+                    System.out.print(ConsoleColors.RESET);
                     break;
                 }
             } catch (Exception e) {
                 System.out.print(ConsoleColors.RED);
-                System.out.println("Incorrect cost input");
+                System.out.println("Incorrect discount input");
                 System.out.print(ConsoleColors.RESET);
             }
         }
@@ -264,7 +280,7 @@ public class Admin {
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);
-        System.out.printf("%4s %12s %13s %22s %11s %14s %15s\n", "Room", "type", "size", "cost with discount", "cost", "discount", "availability");
+        System.out.printf("%5s %11s %13s %22s %11s %14s %15s\n", "Room", "type", "size", "cost with discount", "cost", "discount", "availability");
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=".repeat(100));
         System.out.print(ConsoleColors.RESET);

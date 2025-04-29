@@ -9,6 +9,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.naming.InvalidNameException;
+import javax.naming.LimitExceededException;
+
 public class Guest {
     private String name;
     private double balance;
@@ -22,28 +25,30 @@ public class Guest {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
-            while (name.length() < 3 || name.length() > 20 || name.matches("[a-zA-Z]+") == false) {
-                System.out.print(ConsoleColors.RED);
-                System.out.println("Name has to be at least 3 characters long and without numbers ");
-                System.out.print(ConsoleColors.RESET);
-                System.out.print("Enter your name again: ");
-                name = scanner.nextLine();
+        while (name.length() < 3 || name.length() > 20 || name.matches("[a-zA-Z]+") == false) {
+            System.out.print(ConsoleColors.RED);
+            System.out.println("Name has to be at least 3 characters long and without numbers ");
+            System.out.print(ConsoleColors.RESET);
+            System.out.print("Enter your name again: ");
+            name = scanner.nextLine();
+        }
+        System.out.print("\033[2J\033[3J\033[H");
+        System.out.flush();
+        Guest guest = new Guest(name, 0.0);
+        addGuest(guest);
+        System.out.println("Welcome " + name);
+        showOptions();
+        int option = 0;
+        while (option != 5) {
+            option = checkInput(option, 1, 5);
+            if (option == 5) {
+                break;
             }
-            Guest guest = new Guest(name, 0.0);
-            addGuest(guest);
-            System.out.println("\nWelcome " + name);
+            checkOption(guest, option);
+            System.out.println();
             showOptions();
-            int option = 0;
-            while (option != 5) {
-                option = checkInput(option, 1, 5);
-                if (option == 5) {
-                    break;
-                }
-                checkOption(guest, option);
-                System.out.println();
-                showOptions();
-            }
-            System.out.println("See you soon");
+        }
+        System.out.println("See you soon");
     }
 
     public void showOptions() {
@@ -74,6 +79,7 @@ public class Guest {
 
     public void book(Guest guest) throws Exception {
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         Room.printRooms();
         System.out.println("\nEnter a room number to book it");
         System.out.println();
@@ -88,19 +94,13 @@ public class Guest {
                 System.out.print("For how many nights?: ");
                 int nights = Integer.valueOf(scanner.nextLine());
                 if (nights <= 0) {
-                    System.out.print(ConsoleColors.RED);
-                    System.out.println("Night count has to be above 0");
-                    System.out.print(ConsoleColors.RESET);
-                    break;
+                    throw new InvalidNameException();
                 }
                 if (nights > 30) {
-                    System.out.print(ConsoleColors.RED);
-                    System.out.println("Night count can't be over 30");
-                    System.out.print(ConsoleColors.RESET);
-                    break;
+                    throw new LimitExceededException();
                 }
                 Booking book = new Booking(guest.getName(), answer, nights);
-                System.out.printf("Total cost: %.2f", book.getTotalCost());
+                System.out.printf("Total cost: %.2f\n", book.getTotalCost());
                 if (book.getTotalCost() <= guest.getBalance()) {
                     Booking.addBook(book);
                     Double oldBalance = guest.getBalance();
@@ -108,20 +108,29 @@ public class Guest {
                     updateBalance(guest.getName(), oldBalance, guest.getBalance());
                     success = true;
                 } else {
+                    app.clearScreen();
                     System.out.print(ConsoleColors.RED);
                     System.out.println("\nYou don't have enough money");
                     System.out.print(ConsoleColors.RESET);
                     success = false;
                 }
                 break;
+            } catch(InvalidNameException e){
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Night count has to be above 0");
+                System.out.print(ConsoleColors.RESET);
+            }catch(LimitExceededException e) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Night count can't be over 30");
+                System.out.print(ConsoleColors.RESET);
             } catch(Exception e) {
                 System.out.print(ConsoleColors.RED);
                 System.out.println("Incorrect night count input");
                 System.out.print(ConsoleColors.RESET);
             }
         }
-
         if (success == true) {
+            app.clearScreen();
             Room.updateRoom(answer, guest);
             System.out.print(ConsoleColors.GREEN);
             System.out.println("Successfuly booked a room");
@@ -131,6 +140,7 @@ public class Guest {
 
     public void showRooms() throws Exception {
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         Room.printRooms();
         System.out.println();
         while (true) {
@@ -142,22 +152,26 @@ public class Guest {
             input = checkInput(input, 1, 3);
             if (input == 1) {
                 System.out.println("\nSort by property:");
-                System.out.println("\n1) Cost");
+                System.out.println("1) Cost");
                 System.out.println("2) Size");
                 if ((input = checkInput(input, 1, 2)) == 1) {
                     System.out.println("\n1) From the most expensive");
                     System.out.println("2) From the cheapest");
                     if ((input = checkInput(input, 1, 2)) == 1) {
+                        app.clearScreen();
                         Room.sortByHighestCost();
                     } else {
+                        app.clearScreen();
                         Room.sortByLowestCost();
                     }
                 } else if (input == 2) {
                     System.out.println("\n1) From the biggest");
                     System.out.println("2) From the smallest");
                     if ((input = checkInput(input, 1, 2)) == 1) {
+                        app.clearScreen();
                         Room.sortByBiggestSize();
                     } else {
+                        app.clearScreen();
                         Room.sortBySmallestSize();
                     }
                 }
@@ -177,6 +191,7 @@ public class Guest {
                 break;
             }
         }
+        app.clearScreen();
     }
 
     public static void enterRangeOfCost() {
@@ -197,7 +212,7 @@ public class Guest {
                     System.out.println("Starting value cannot be lesser than end value");
                     System.out.print(ConsoleColors.RESET);
                 } else {
-                    System.out.println();
+                    app.clearScreen();
                     Room.searchByCost(from, to);
                     break;
                 }
@@ -227,7 +242,7 @@ public class Guest {
                     System.out.println("Starting value cannot be lesser than end value");
                     System.out.print(ConsoleColors.RESET);
                 } else {
-                    System.out.println();
+                    app.clearScreen();
                     Room.searchBySize(from, to);
                     break;
                 }
@@ -257,7 +272,7 @@ public class Guest {
                     System.out.println("Starting value cannot be lesser than end value");
                     System.out.print(ConsoleColors.RESET);
                 } else {
-                    System.out.println();
+                    app.clearScreen();
                     Room.searchByDiscount(from, to);
                     break;
                 }
@@ -271,6 +286,7 @@ public class Guest {
 
     public void checkBalance(Guest guest) {
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         int answer = 0;
         while (answer != 3) {
             System.out.println("Your balance: " + guest.balance + " EUR");
@@ -298,19 +314,23 @@ public class Guest {
                         updateBalance(guest.name, oldGuest.balance, newGuest.balance);
                     }
                 } catch (Exception e) {
+                    app.clearScreen();
                     System.out.print(ConsoleColors.RED);
                     System.out.println("Incorrect input\n");
                     System.out.print(ConsoleColors.RESET);
                 }
         }
+        app.clearScreen();
     }
 
     public void checkBookedRooms(Guest guest) throws Exception{
         Scanner scanner = new Scanner(System.in);
+        app.clearScreen();
         Booking.searchBooked(guest);
         System.out.println("1) Exit\n");
         int input = 0;
         input = checkInput(input, 1, 1);
+        app.clearScreen();
     }
 
     public void setName(String newName) {
@@ -327,8 +347,13 @@ public class Guest {
 
     public void deposit(double money) {
         if (money > 0.0) {
+            app.clearScreen();
+            System.out.print(ConsoleColors.GREEN);
+            System.out.println("Successfully added money");
+            System.out.println(ConsoleColors.RESET);
             balance += money;
         } else {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("Input must be above 0.0");
             System.out.print(ConsoleColors.RESET);
@@ -337,8 +362,13 @@ public class Guest {
 
     public void withdraw(double money) {
         if ((balance - money) >= 0.0 && money >= 0) {
+            app.clearScreen();
+            System.out.print(ConsoleColors.GREEN);
+            System.out.println("Successfully withdrawn money");
+            System.out.println(ConsoleColors.RESET);
             balance -= money;
         } else {
+            app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("Incorrect withdraw value");
             System.out.print(ConsoleColors.RESET);

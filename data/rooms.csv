@@ -5,7 +5,7 @@ Room, type, size, cost, discount, availability, guest
 4, triple room, 35, 129, 0, available, none
 5, junior suite, 45, 166, 5, available, none
 6, double room, 27, 121, 0, available, none
-7, deluxe room, 40, 157, 0, unavailable, none
-8, queen room, 35, 120, 0, unavailable, none
+7, deluxe room, 40, 157, 0, available, none
+8, queen room, 35, 120, 0, available, none
 9, studio room, 45, 147, 0, available, none
-10, suite, 60, 258, 25, available, none
+10, suite, 60, 258, 0, available, none
