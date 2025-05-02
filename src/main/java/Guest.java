@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.naming.InvalidNameException;
@@ -15,10 +16,12 @@ import javax.naming.LimitExceededException;
 public class Guest {
     private String name;
     private double balance;
+    private String password;
 
-    public Guest(String name, double balance) {
+    public Guest(String name, double balance, String password) {
         this.name = name;
         this.balance = balance;
+        this.password = password;
     }
 
     public void guest() throws Exception{
@@ -32,11 +35,34 @@ public class Guest {
             System.out.print("Enter your name again: ");
             name = scanner.nextLine();
         }
+        System.out.print("Enter unique password: ");
+        String password = scanner.nextLine();
+        while (true) {
+            if (password.length() <= 3) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Password must be at least 4 symbols long");
+                System.out.print(ConsoleColors.RESET);
+                System.out.print("Enter unique password again: ");
+                password = scanner.nextLine();
+            } else if (checkIfPasswordExists(name, password) == true) {
+                System.out.print(ConsoleColors.RED);
+                System.out.println("Password already exists");
+                System.out.print(ConsoleColors.RESET);
+                System.out.print("Enter unique password again: ");
+                password = scanner.nextLine();
+            } else {
+                break;
+            }
+        }
+        Double balance = getBalanceFromExistingGuest(name, password);
         System.out.print("\033[2J\033[3J\033[H");
         System.out.flush();
-        Guest guest = new Guest(name, 0.0);
-        addGuest(guest);
-        System.out.println("Welcome " + name);
+        Guest guest = new Guest(name, balance, password);
+        if (checkIfGuestExists(name, password) == false) {
+            addGuest(guest);
+        }
+        Room.printRooms();
+        System.out.println("\nWelcome " + name);
         showOptions();
         int option = 0;
         while (option != 5) {
@@ -46,15 +72,17 @@ public class Guest {
             }
             checkOption(guest, option);
             System.out.println();
+            Room.printRooms();
             showOptions();
         }
+        app.clearScreen();
         System.out.println("See you soon");
     }
 
     public void showOptions() {
         System.out.println("Choose one of the option:");
         System.out.println("1) Book - book a room for a certain time period");
-        System.out.println("2) Rooms - shows all rooms");
+        System.out.println("2) Search and filter");
         System.out.println("3) Balance - check your balance or deposit money");
         System.out.println("4) See your booked rooms");
         System.out.println("5) Exit\n");
@@ -99,13 +127,13 @@ public class Guest {
                 if (nights > 30) {
                     throw new LimitExceededException();
                 }
-                Booking book = new Booking(guest.getName(), answer, nights);
+                Booking book = new Booking(guest.getName(), answer, nights, guest.getPassword());
                 System.out.printf("Total cost: %.2f\n", book.getTotalCost());
                 if (book.getTotalCost() <= guest.getBalance()) {
                     Booking.addBook(book);
                     Double oldBalance = guest.getBalance();
                     guest.withdraw(book.getTotalCost());
-                    updateBalance(guest.getName(), oldBalance, guest.getBalance());
+                    updateBalance(guest, oldBalance);
                     success = true;
                 } else {
                     app.clearScreen();
@@ -289,7 +317,7 @@ public class Guest {
         app.clearScreen();
         int answer = 0;
         while (answer != 3) {
-            System.out.println("Your balance: " + guest.balance + " EUR");
+            System.out.printf("Your balance: %.2f EUR\n", guest.balance);
             System.out.println("\nWould you like to:");
             System.out.println("1) Deposit money");
             System.out.println("2) Withdraw money");
@@ -297,21 +325,21 @@ public class Guest {
                 try {
                     answer = 0;
                     answer = checkInput(answer, 1, 3);
-                    Guest oldGuest = new Guest(guest.name, guest.balance);
+                    Guest oldGuest = new Guest(guest.name, guest.balance, guest.password);
                     if (answer == 1) {
                         System.out.print("How much would you like to deposit?: ");
                         double deposit = Double.valueOf(scanner.nextLine());
                         guest.deposit(deposit);
                         System.out.println();
-                        Guest newGuest = new Guest(guest.name, guest.balance);
-                        updateBalance(guest.name, oldGuest.balance, newGuest.balance);
+                        Guest newGuest = new Guest(guest.name, guest.balance, guest.password);
+                        updateBalance(newGuest, oldGuest.balance);
                     } else if (answer == 2) {
                         System.out.print("How much would you like to withdraw?: ");
                         double withdraw = Double.valueOf(scanner.nextLine());
                         guest.withdraw(withdraw);
                         System.out.println();
-                        Guest newGuest = new Guest(guest.name, guest.balance);
-                        updateBalance(guest.name, oldGuest.balance, newGuest.balance);
+                        Guest newGuest = new Guest(guest.name, guest.balance, guest.password);
+                        updateBalance(newGuest, oldGuest.balance);
                     }
                 } catch (Exception e) {
                     app.clearScreen();
@@ -345,12 +373,16 @@ public class Guest {
         return balance;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void deposit(double money) {
         if (money > 0.0) {
             app.clearScreen();
             System.out.print(ConsoleColors.GREEN);
             System.out.println("Successfully added money");
-            System.out.println(ConsoleColors.RESET);
+            System.out.print(ConsoleColors.RESET);
             balance += money;
         } else {
             app.clearScreen();
@@ -365,7 +397,7 @@ public class Guest {
             app.clearScreen();
             System.out.print(ConsoleColors.GREEN);
             System.out.println("Successfully withdrawn money");
-            System.out.println(ConsoleColors.RESET);
+            System.out.print(ConsoleColors.RESET);
             balance -= money;
         } else {
             app.clearScreen();
@@ -375,6 +407,60 @@ public class Guest {
         }
     }
 
+    public static Boolean checkIfPasswordExists(String name, String password) throws Exception{
+        HashMap<String, Guest> guestList = getGuestList();
+        Boolean exists = false;
+        for(Guest guest: guestList.values()) {
+            if (guest.getPassword().equals(password) && guest.getName().equals(name) == false) {
+                exists = true;
+            }
+        }
+        return exists;
+    }
+
+    public static boolean checkIfGuestExists(String name, String password) throws Exception {
+        HashMap<String, Guest> guestList = getGuestList();
+        Boolean exists = false;
+        for (Guest guest: guestList.values()) {
+            if (guest.getPassword().equals(password) && guest.getName().equals(name)) {
+                exists = true;
+            }
+        }
+
+        return exists;
+    }
+
+    public static Double getBalanceFromExistingGuest(String name, String password) throws Exception{
+        HashMap<String, Guest> guestList = getGuestList();
+        Double balance = 0.0;
+        for(Guest guest: guestList.values()) {
+            if (guest.getPassword().equals(password) && guest.getName().equals(name)) {
+                balance = guest.getBalance();
+            }
+        }
+        return balance;
+    }
+
+    public static HashMap<String, Guest> getGuestList() throws Exception {
+        BufferedReader reader = Helper.gerReader("guests.csv");
+
+        HashMap<String, Guest> guestList = new HashMap<>();
+        String line;
+
+        reader.readLine();       
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(", ");
+
+            String name = parts[0];
+            Double balance = Double.valueOf(parts[1]);
+            String password = parts[2];
+
+            Guest guest = new Guest(name, balance, password);
+            guestList.put(password, guest);
+        }
+        return guestList;
+    }
+    
     public void addGuest(Guest guest) throws Exception {
         BufferedWriter writer =
         Helper.getWriter("guests.csv", StandardOpenOption.APPEND);
@@ -387,12 +473,13 @@ public class Guest {
         
         String name = parts[0];
         double balance = Double.valueOf(parts[1]);
-        Guest guest = new Guest(name, balance);
+        String password = parts[2];
+        Guest guest = new Guest(name, balance, password);
         addGuest(guest);
     }
 
     public static String guestToCsvRow(Guest guest) {
-        return guest.name + ", " + guest.balance + "\n";
+        return guest.name + ", " + guest.balance + ", " + guest.password + "\n";
     }
 
     public static int checkInput(int input, int start, int end) {
@@ -420,7 +507,7 @@ public class Guest {
         return input;
     }
 
-    public static void updateBalance(String name, double oldBalance, double newBalance) throws Exception{
+    public static void updateBalance(Guest guest, double oldBalance) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/guests.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/tempguests.csv");
         tempFile.createNewFile();
@@ -429,12 +516,12 @@ public class Guest {
         BufferedWriter writer =
 
         Helper.getWriter("tempguests.csv", StandardOpenOption.APPEND);
-        String linetoupdate = name + ", " + oldBalance;
+        String linetoupdate = guest.name + ", " + oldBalance + ", " + guest.password;
         String currentLine;
 
         while ((currentLine = reader.readLine()) != null) {
             if (currentLine.equals(linetoupdate)) {
-                writer.write(name + ", " + newBalance + "\n");
+                writer.write(guest.name + ", " + guest.balance + ", " + guest.password + "\n");
                 continue;
             }
             

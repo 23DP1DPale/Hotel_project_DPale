@@ -12,8 +12,9 @@ public class Booking {
     public double totalCost;
     private String type;
     private int size;
+    private String guestPassword;
     
-    public Booking(String guest, String room, int nights) throws Exception{
+    public Booking(String guest, String room, int nights, String guestPassword) throws Exception{
         this.guest = guest;
         this.room = room;
         this.nights = nights;
@@ -21,6 +22,7 @@ public class Booking {
         this.totalCost = getTotalCost(room, nights, discount);
         this.type = getType(room);
         this.size = getSize(room);
+        this.guestPassword = guestPassword;
     }
 
     public int getDiscount(String room) throws Exception{
@@ -84,11 +86,15 @@ public class Booking {
         return nights;
     }
 
+    public String getGuestPassword() {
+        return guestPassword;
+    }
+
     public static Boolean checkIfBooked(String roomNumber, Guest guest) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         Room lineToCheck = roomsList.get(roomNumber);
 
-        if (lineToCheck.getGuest().equals(guest.getName())) {
+        if (lineToCheck.getGuest().equals(guest.getName()) && lineToCheck.getGuestPassword().equals(guest.getPassword())) {
             app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("You have booked this room already");
@@ -123,8 +129,9 @@ public class Booking {
         String guest = parts[0];
         String room = parts[1];
         int nights = Integer.valueOf(parts[2]);
+        String guestPassword = parts[3];
 
-        Booking book = new Booking(guest, room, nights);
+        Booking book = new Booking(guest, room, nights, guestPassword);
         addBook(book);
     }
 
@@ -141,8 +148,9 @@ public class Booking {
             String guest = parts[0];
             String room = parts[1];
             int nights = Integer.valueOf(parts[2]);
+            String guestPassword = parts[5];
 
-            Booking book = new Booking(guest, room, nights);
+            Booking book = new Booking(guest, room, nights, guestPassword);
             bookList.add(book);
         }
         return bookList;
@@ -152,7 +160,7 @@ public class Booking {
         ArrayList<Booking> books = getBooks();
         int bookedRoomCount = 0;
         for (Booking book: books) {
-            if (book.getGuestName().equals(guest.getName())) {
+            if (book.getGuestName().equals(guest.getName()) && book.getGuestPassword().equals(guest.getPassword())) {
                 bookedRoomCount++;
             }
         }
@@ -163,7 +171,7 @@ public class Booking {
             System.out.print(ConsoleColors.BLUE);
             System.out.println("=".repeat(58));
             System.out.print(ConsoleColors.RESET);
-            System.out.printf("%5s %10s %13s %10s %14s\n","Room", "type", "size", "nights", "total cost");
+            System.out.printf("%5s %12s %12s %10s %14s\n","Room", "type", "size", "nights", "total cost");
             System.out.print(ConsoleColors.BLUE);
             System.out.println("=".repeat(58));
             System.out.print(ConsoleColors.RESET);
@@ -178,10 +186,10 @@ public class Booking {
     }
 
     public void showBookedRooms() {
-        System.out.printf("%4s %15s %7dm² %7d %13.2f EUR\n", this.room, this.type, this.size, this.nights, this.totalCost);
+        System.out.printf("%4s %16s %7dm² %7d %13.2f EUR\n", this.room, this.type, this.size, this.nights, this.totalCost);
     }
 
     public static String bookToCsvRow(Booking book) {
-        return book.guest + ", " + book.room + ", " + book.nights + ", " + book.discount + ", " + book.totalCost;
+        return book.guest + ", " + book.room + ", " + book.nights + ", " + book.discount + ", " + book.totalCost + ", " + book.guestPassword;
     }
 }

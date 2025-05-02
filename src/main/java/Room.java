@@ -12,8 +12,9 @@ public class Room {
     private String availability;
     private String guest;
     private int discount;
+    private String guestPassword;
 
-    public Room(String number, String type, int size, int cost, int discount, String availability, String guest) {
+    public Room(String number, String type, int size, int cost, int discount, String availability, String guest, String guestPassword) {
         this.number = number;
         this.type = type;
         this.size = size;
@@ -21,6 +22,7 @@ public class Room {
         this.availability = availability;
         this.discount = discount;
         this.guest = guest;
+        this.guestPassword = guestPassword;
     }
 
     public String getRoomnumber() {
@@ -60,6 +62,10 @@ public class Room {
         return guest;
     }
 
+    public String getGuestPassword() {
+        return guestPassword;
+    }
+
     public void setCost(int newCost) {
         cost = newCost;
     }
@@ -93,8 +99,9 @@ public class Room {
             int discount = Integer.valueOf(parts[4]);
             String availability = parts[5];
             String guest = parts[6];
+            String guestPassword = parts[7];
 
-            Room room = new Room(number, type, size, cost, discount, availability, guest);
+            Room room = new Room(number, type, size, cost, discount, availability, guest, guestPassword);
             roomList.put(number, room);
         }
         return roomList;
@@ -118,7 +125,7 @@ public class Room {
         HashMap<String, Room> roomsList = getRoomsList();
         String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
 
-        if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName()))) {
+        if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName(), guest.getPassword()))) {
             app.clearScreen();
             System.out.print(ConsoleColors.RED);
             System.out.println("You have booked this room already");
@@ -136,7 +143,7 @@ public class Room {
             while((currentLine = reader.readLine()) != null) {
                 String trimmedLine = currentLine.trim();
                 if(trimmedLine.equals(linetoupdate)) {
-                    writer.write(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName()) + "\n");
+                    writer.write(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName(), guest.getPassword()) + "\n");
                     continue;
                 }
                 writer.write(currentLine + "\n");
@@ -271,12 +278,12 @@ public class Room {
         return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + this.guest;
     }
 
-    public String roomsToCsvRow(String availability, String name) {
-        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + name;
+    public String roomsToCsvRow(String availability, String name, String password) {
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + name + ", " + password;
     }
 
     public String roomsToCsvRow() {
-        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.availability + ", " + this.guest;
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + this.availability + ", " + this.guest + ", " + this.guestPassword;
     }
 
     public void roomsToCsvRowSymb() {
@@ -298,9 +305,12 @@ public class Room {
     public void roomsToCsvRowSymbAdmin() {
         String checkAvailability = this.availability;
         int padding = 27;
-        if (checkAvailability.equals("occupied") || checkAvailability.equals("unavailable")) {
+        if (checkAvailability.equals("unavailable")) {
             checkAvailability = ConsoleColors.RED;
             padding = 28;
+        } else if (checkAvailability.equals("occupied")){
+            checkAvailability = ConsoleColors.RED;
+            padding = 26;
         } else {
             checkAvailability = ConsoleColors.GREEN;
         }
