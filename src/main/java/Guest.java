@@ -66,7 +66,7 @@ public class Guest {
         showOptions();
         int option = 0;
         while (option != 5) {
-            option = checkInput(option, 1, 5);
+            option = checkInput(1, 5);
             if (option == 5) {
                 break;
             }
@@ -112,7 +112,7 @@ public class Guest {
         System.out.println("\nEnter a room number to book it");
         System.out.println();
         String answer = "0";
-        answer = String.valueOf(checkInput(Integer.valueOf(answer), 1, 10));
+        answer = String.valueOf(checkInput(1, 10));
         Boolean success = false;
         while (true) {
             if (Booking.checkIfBooked(answer, guest)) {
@@ -147,7 +147,7 @@ public class Guest {
                 System.out.print(ConsoleColors.RED);
                 System.out.println("Night count has to be above 0");
                 System.out.print(ConsoleColors.RESET);
-            }catch(LimitExceededException e) {
+            } catch(LimitExceededException e) {
                 System.out.print(ConsoleColors.RED);
                 System.out.println("Night count can't be over 30");
                 System.out.print(ConsoleColors.RESET);
@@ -177,15 +177,15 @@ public class Guest {
             System.out.println("2) Search");
             System.out.println("3) Exit");
             int input = 0;
-            input = checkInput(input, 1, 3);
+            input = checkInput(1, 3);
             if (input == 1) {
                 System.out.println("\nSort by property:");
                 System.out.println("1) Cost");
                 System.out.println("2) Size");
-                if ((input = checkInput(input, 1, 2)) == 1) {
+                if ((input = checkInput(1, 2)) == 1) {
                     System.out.println("\n1) From the most expensive");
                     System.out.println("2) From the cheapest");
-                    if ((input = checkInput(input, 1, 2)) == 1) {
+                    if ((input = checkInput(1, 2)) == 1) {
                         app.clearScreen();
                         Room.sortByHighestCost();
                     } else {
@@ -195,7 +195,7 @@ public class Guest {
                 } else if (input == 2) {
                     System.out.println("\n1) From the biggest");
                     System.out.println("2) From the smallest");
-                    if ((input = checkInput(input, 1, 2)) == 1) {
+                    if ((input = checkInput(1, 2)) == 1) {
                         app.clearScreen();
                         Room.sortByBiggestSize();
                     } else {
@@ -208,7 +208,7 @@ public class Guest {
                 System.out.println("1) Cost");
                 System.out.println("2) Size");
                 System.out.println("3) Discount");
-                if ((input = checkInput(input, 1, 3)) == 1) {
+                if ((input = checkInput(1, 3)) == 1) {
                     enterRangeOfCost();
                 } else if (input == 2) {
                     enterRangeOfSize();
@@ -324,7 +324,7 @@ public class Guest {
             System.out.println("3) Exit\n");
                 try {
                     answer = 0;
-                    answer = checkInput(answer, 1, 3);
+                    answer = checkInput(1, 3);
                     Guest oldGuest = new Guest(guest.name, guest.balance, guest.password);
                     if (answer == 1) {
                         System.out.print("How much would you like to deposit?: ");
@@ -357,12 +357,8 @@ public class Guest {
         Booking.searchBooked(guest);
         System.out.println("1) Exit\n");
         int input = 0;
-        input = checkInput(input, 1, 1);
+        input = checkInput(1, 1);
         app.clearScreen();
-    }
-
-    public void setName(String newName) {
-        name = newName;
     }
 
     public String getName() {
@@ -393,7 +389,7 @@ public class Guest {
     }
 
     public void withdraw(double money) {
-        if ((balance - money) >= 0.0 && money >= 0) {
+        if ((balance - money) >= 0.0 && money > 0.0) {
             app.clearScreen();
             System.out.print(ConsoleColors.GREEN);
             System.out.println("Successfully withdrawn money");
@@ -409,13 +405,12 @@ public class Guest {
 
     public static Boolean checkIfPasswordExists(String name, String password) throws Exception{
         HashMap<String, Guest> guestList = getGuestList();
-        Boolean exists = false;
         for(Guest guest: guestList.values()) {
             if (guest.getPassword().equals(password) && guest.getName().equals(name) == false) {
-                exists = true;
+                return true;
             }
         }
-        return exists;
+        return false;
     }
 
     public static boolean checkIfGuestExists(String name, String password) throws Exception {
@@ -482,9 +477,9 @@ public class Guest {
         return guest.name + ", " + guest.balance + ", " + guest.password + "\n";
     }
 
-    public static int checkInput(int input, int start, int end) {
+    public static int checkInput(int start, int end) {
         Scanner scanner = new Scanner(System.in);
-        input = 0;
+        int input = 0;
         while (true) {
             try {
                 System.out.print("Input: ");
@@ -530,6 +525,6 @@ public class Guest {
         }
         writer.close(); 
         reader.close();
-        boolean successful = tempFile.renameTo(oldFile);
+        tempFile.renameTo(oldFile);
     }
 }

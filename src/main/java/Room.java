@@ -29,10 +29,6 @@ public class Room {
         return number;
     }
 
-    public void setRoomNumber(String newNumber) {
-        this.number = newNumber;
-    } 
-
     public String getType() {
         return type;
     }
@@ -70,10 +66,6 @@ public class Room {
         cost = newCost;
     }
 
-    public void setGuest(String newGuest) {
-        guest = newGuest;
-    }
-
     public void setAvailability(String newAvailability) {
         availability = newAvailability;
     }
@@ -107,17 +99,10 @@ public class Room {
         return roomList;
     }
 
-    public static void getRoomCost(String roomNumber) throws Exception{
-        HashMap<String, Room> roomsList = getRoomsList();
-        Room room = roomsList.get(roomNumber);
-        System.out.println(room.getCost());
-    }
-
-    public static Boolean updateRoom(String roomNumber, Guest guest) throws Exception{
+    public static void updateRoom(String roomNumber, Guest guest) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
         tempFile.createNewFile();
-        Boolean success = false;
         BufferedReader reader = Helper.gerReader("rooms.csv");
         BufferedWriter writer =
 
@@ -125,35 +110,20 @@ public class Room {
         HashMap<String, Room> roomsList = getRoomsList();
         String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
 
-        if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName(), guest.getPassword()))) {
-            app.clearScreen();
-            System.out.print(ConsoleColors.RED);
-            System.out.println("You have booked this room already");
-            System.out.print(ConsoleColors.RESET);
-            tempFile.delete();
-        } else if (linetoupdate.equals(roomsList.get(roomNumber).roomsToCsvRow("occupied"))) {
-            app.clearScreen();
-            System.out.print(ConsoleColors.RED);
-            System.out.println("This room is already occupied");
-            System.out.print(ConsoleColors.RESET);
-            tempFile.delete();
-        } else {
-            String currentLine;
+        String currentLine;
 
-            while((currentLine = reader.readLine()) != null) {
-                String trimmedLine = currentLine.trim();
-                if(trimmedLine.equals(linetoupdate)) {
-                    writer.write(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName(), guest.getPassword()) + "\n");
-                    continue;
-                }
-                writer.write(currentLine + "\n");
+        while((currentLine = reader.readLine()) != null) {
+            String trimmedLine = currentLine.trim();
+            if(trimmedLine.equals(linetoupdate)) {
+                writer.write(roomsList.get(roomNumber).roomsToCsvRow("occupied", guest.getName(), guest.getPassword()) + "\n");
+                continue;
             }
-            success = true;
-            boolean successful = tempFile.renameTo(oldFile);
+            writer.write(currentLine + "\n");
         }
+        tempFile.renameTo(oldFile);
+
         writer.close(); 
         reader.close();
-        return success;
     }
     
     public static void sortByHighestCost() throws Exception{
@@ -275,7 +245,7 @@ public class Room {
     }
 
     public String roomsToCsvRow(String availability) {
-        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + this.guest;
+        return this.number + ", " + this.type + ", " + this.size + ", " + this.cost + ", " + this.discount + ", " + availability + ", " + this.guest + ", " + this.guestPassword;
     }
 
     public String roomsToCsvRow(String availability, String name, String password) {

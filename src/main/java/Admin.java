@@ -38,7 +38,7 @@ public class Admin {
             showOptions();
             int option = 0;
             while (option != 4) {
-                option = Guest.checkInput(option, 1, 4);
+                option = Guest.checkInput(1, 4);
                 if (option == 5) {
                     break;
                 }
@@ -79,7 +79,7 @@ public class Admin {
         printRooms();
         System.out.println("\nEnter a room number to change its cost");
         String room = "0";
-        room = String.valueOf(Guest.checkInput(Integer.valueOf(room), 1, 10));
+        room = String.valueOf(Guest.checkInput(1, 10));
         while (true) {
             try {
                 System.out.print("Cost: ");
@@ -122,7 +122,7 @@ public class Admin {
                     System.out.println("1)Available");
                     System.out.println("2)Unavailable");
                     int answer = 0;
-                    answer = Guest.checkInput(answer, 1, 2);
+                    answer = Guest.checkInput(1, 2);
                     if (answer == 1) {
                         changeAvailability(room, "available");
                         break;
@@ -153,7 +153,7 @@ public class Admin {
         printRooms();
         System.out.println("\nEnter a room number to change its discount");
         String room = "0";
-        room = String.valueOf(Guest.checkInput(Integer.valueOf(room), 1, 10));
+        room = String.valueOf(Guest.checkInput(1, 10));
         while (true) {
             try {
                 System.out.print("Discount(0-100%): ");
