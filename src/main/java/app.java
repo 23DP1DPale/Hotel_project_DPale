@@ -11,6 +11,7 @@ public class app {
         }
     }
 
+    // Shows title and let's to choose the role
     public static String showMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         clearScreen();
@@ -44,6 +45,7 @@ public class app {
         return answer;
     }
 
+    // clears console
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();

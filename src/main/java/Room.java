@@ -74,6 +74,7 @@ public class Room {
         discount = newDiscount;
     }
 
+    // Gets rooms from rooms.csv
     public static HashMap<String, Room> getRoomsList() throws Exception {
         BufferedReader reader = Helper.gerReader("rooms.csv");
 
@@ -99,6 +100,7 @@ public class Room {
         return roomList;
     }
 
+    // Updates rooms availability to occupied, adds guest and guest password in rooms.csv
     public static void updateRoom(String roomNumber, Guest guest) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
@@ -126,6 +128,7 @@ public class Room {
         reader.close();
     }
     
+    // Print table of rooms sorted from most expensive to cheapest
     public static void sortByHighestCost() throws Exception{
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
@@ -147,6 +150,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms sorted from most cheapest to expensive
     public static void sortByLowestCost() throws Exception{
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
@@ -168,6 +172,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms sorted from biggest to smallest
     public static void sortByBiggestSize() throws Exception{
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
@@ -188,6 +193,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms sorted from smallest to biggest
     public static void sortBySmallestSize() throws Exception {
         HashMap<String, Room> roomsList = getRoomsList();
         for (int i = 1; i <= roomsList.size(); i++) {
@@ -208,6 +214,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms by range of cost
     public static void searchByCost(int from, int to) throws Exception {
         HashMap<String, Room> roomsList = getRoomsList();
         printRoomHeader();
@@ -220,6 +227,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms by range of size
     public static void searchBySize(int from, int to) throws Exception {
         HashMap<String, Room> roomsList = getRoomsList();
         printRoomHeader();
@@ -232,6 +240,7 @@ public class Room {
         System.out.println();
     }
 
+    // Print table of rooms by range of discount
     public static void searchByDiscount(int from, int to) throws Exception {
         HashMap<String, Room> roomsList = getRoomsList();
         printRoomHeader();
@@ -288,10 +297,6 @@ public class Room {
         System.out.printf("%3s  %15s %8dm² %13.2f EUR %13d EUR %9d %% %" + padding +"s\n", this.number, this.type, this.size, costWithDiscount, this.cost, this.discount, checkAvailability + this.availability + ConsoleColors.RESET);
     }
 
-    public String printBookedRooms() {
-        return this.number + " " + this.type + ", " + this.size + "m², " + this.cost + " EUR, " + this.discount + " %, ";
-    }
-
     public static void printRoomHeader() {
         System.out.print(ConsoleColors.BLUE);
         System.out.println("=".repeat(80));
@@ -302,6 +307,7 @@ public class Room {
         System.out.print(ConsoleColors.RESET);
     }
 
+    // Prints table of rooms
     public static void printRooms() throws Exception{
         HashMap<String, Room> rooms = getRoomsList();
         printRoomHeader();

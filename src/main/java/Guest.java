@@ -55,8 +55,7 @@ public class Guest {
             }
         }
         Double balance = getBalanceFromExistingGuest(name, password);
-        System.out.print("\033[2J\033[3J\033[H");
-        System.out.flush();
+        app.clearScreen();
         Guest guest = new Guest(name, balance, password);
         if (checkIfGuestExists(name, password) == false) {
             addGuest(guest);
@@ -71,14 +70,15 @@ public class Guest {
                 break;
             }
             checkOption(guest, option);
-            System.out.println();
             Room.printRooms();
+            System.out.println();
             showOptions();
         }
         app.clearScreen();
         System.out.println("See you soon");
     }
 
+    // Shows available options
     public void showOptions() {
         System.out.println("Choose one of the option:");
         System.out.println("1) Book - book a room for a certain time period");
@@ -88,8 +88,8 @@ public class Guest {
         System.out.println("5) Exit\n");
     }
 
+    // Checks option user chose and does the requested function
     public void checkOption(Guest guest, int option) throws Exception {
-        Scanner scanner = new Scanner(System.in);
         if (option == 1) {
             System.out.println("\n");
             book(guest);
@@ -105,6 +105,7 @@ public class Guest {
         }
     }
 
+    // Book a room for a certain amount of nights
     public void book(Guest guest) throws Exception {
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -166,6 +167,7 @@ public class Guest {
         }
     }
 
+    // Lets filter or search rooms by requirements
     public void showRooms() throws Exception {
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -222,6 +224,7 @@ public class Guest {
         app.clearScreen();
     }
 
+    // Lets to enter range of cost to show rooms
     public static void enterRangeOfCost() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -252,6 +255,7 @@ public class Guest {
         }
     }
 
+    // Lets to enter range of room size to show rooms
     public static void enterRangeOfSize() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -282,6 +286,7 @@ public class Guest {
         }
     }
 
+    // Lets to enter range of discount to show rooms
     public static void enterRangeOfDiscount() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -312,12 +317,14 @@ public class Guest {
         }
     }
 
-    public void checkBalance(Guest guest) {
+    // Shows your balance and lets to interact with it
+    public void checkBalance(Guest guest) throws Exception {
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
         int answer = 0;
         while (answer != 3) {
-            System.out.printf("Your balance: %.2f EUR\n", guest.balance);
+            Room.printRooms();
+            System.out.printf("\nYour balance: %.2f EUR\n", guest.balance);
             System.out.println("\nWould you like to:");
             System.out.println("1) Deposit money");
             System.out.println("2) Withdraw money");
@@ -330,27 +337,26 @@ public class Guest {
                         System.out.print("How much would you like to deposit?: ");
                         double deposit = Double.valueOf(scanner.nextLine());
                         guest.deposit(deposit);
-                        System.out.println();
                         Guest newGuest = new Guest(guest.name, guest.balance, guest.password);
                         updateBalance(newGuest, oldGuest.balance);
                     } else if (answer == 2) {
                         System.out.print("How much would you like to withdraw?: ");
                         double withdraw = Double.valueOf(scanner.nextLine());
                         guest.withdraw(withdraw);
-                        System.out.println();
                         Guest newGuest = new Guest(guest.name, guest.balance, guest.password);
                         updateBalance(newGuest, oldGuest.balance);
                     }
                 } catch (Exception e) {
                     app.clearScreen();
                     System.out.print(ConsoleColors.RED);
-                    System.out.println("Incorrect input\n");
+                    System.out.println("Incorrect input");
                     System.out.print(ConsoleColors.RESET);
                 }
         }
         app.clearScreen();
     }
 
+    // Shows your booked rooms if you have any
     public void checkBookedRooms(Guest guest) throws Exception{
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -373,6 +379,7 @@ public class Guest {
         return password;
     }
 
+    // Adds money to balance
     public void deposit(double money) {
         if (money > 0.0) {
             app.clearScreen();
@@ -388,6 +395,7 @@ public class Guest {
         }
     }
 
+    // Takes out money from balance
     public void withdraw(double money) {
         if ((balance - money) >= 0.0 && money > 0.0) {
             app.clearScreen();
@@ -403,6 +411,7 @@ public class Guest {
         }
     }
 
+    // Checks if password already exists
     public static Boolean checkIfPasswordExists(String name, String password) throws Exception{
         HashMap<String, Guest> guestList = getGuestList();
         for(Guest guest: guestList.values()) {
@@ -413,6 +422,7 @@ public class Guest {
         return false;
     }
 
+    // Checks if guest already exists
     public static boolean checkIfGuestExists(String name, String password) throws Exception {
         HashMap<String, Guest> guestList = getGuestList();
         Boolean exists = false;
@@ -425,6 +435,7 @@ public class Guest {
         return exists;
     }
 
+    // Gets balance of guest if name and password are the same
     public static Double getBalanceFromExistingGuest(String name, String password) throws Exception{
         HashMap<String, Guest> guestList = getGuestList();
         Double balance = 0.0;
@@ -436,6 +447,7 @@ public class Guest {
         return balance;
     }
 
+    // Gets list of guests from guests.csv
     public static HashMap<String, Guest> getGuestList() throws Exception {
         BufferedReader reader = Helper.gerReader("guests.csv");
 
@@ -463,6 +475,7 @@ public class Guest {
         writer.close();
     }
 
+    // Adds guest to guests.csv
     public void addGuest(String line) throws Exception{
         String[] parts = line.split(" ");
         
@@ -477,6 +490,7 @@ public class Guest {
         return guest.name + ", " + guest.balance + ", " + guest.password + "\n";
     }
 
+    // Checks if input is in the diapason
     public static int checkInput(int start, int end) {
         Scanner scanner = new Scanner(System.in);
         int input = 0;
@@ -502,6 +516,7 @@ public class Guest {
         return input;
     }
 
+    // Updates balance for a existing guest
     public static void updateBalance(Guest guest, double oldBalance) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/guests.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/tempguests.csv");

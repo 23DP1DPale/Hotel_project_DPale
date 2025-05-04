@@ -25,6 +25,7 @@ public class Booking {
         this.guestPassword = guestPassword;
     }
 
+    // Gets discount from rooms.csv
     public int getDiscount(String room) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         int discount = 0;
@@ -36,6 +37,7 @@ public class Booking {
         return discount;
     }
 
+    // Gets room type from rooms.csv
     public String getType(String room) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         String type = null;
@@ -47,6 +49,7 @@ public class Booking {
         return type;
     }
 
+    // Gets room size from rooms.csv
     public int getSize(String room) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         int size = 0;
@@ -58,6 +61,7 @@ public class Booking {
         return size;
     }
 
+    // Calculates total cost of book
     public Double getTotalCost(String room, int nights, int discount) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         Double totalCost = 0.0;
@@ -90,6 +94,7 @@ public class Booking {
         return guestPassword;
     }
 
+    // Checks if room is available or unavailable
     public static Boolean checkIfBooked(String roomNumber, Guest guest) throws Exception{
         HashMap<String, Room> roomsList = Room.getRoomsList();
         Room lineToCheck = roomsList.get(roomNumber);
@@ -123,6 +128,7 @@ public class Booking {
         }
     }
     
+    // Adds book to book.csv
     public void addBook(String line) throws Exception{
         String[] parts = line.split(" ");
         
@@ -135,6 +141,7 @@ public class Booking {
         addBook(book);
     }
 
+    // Get books from book.csv
     public static ArrayList<Booking> getBooks() throws Exception{
         BufferedReader reader = Helper.gerReader("book.csv");
 
@@ -156,6 +163,7 @@ public class Booking {
         return bookList;
     }
 
+    // Searches users booked rooms
     public static void searchBooked(Guest guest) throws Exception{
         ArrayList<Booking> books = getBooks();
         int bookedRoomCount = 0;

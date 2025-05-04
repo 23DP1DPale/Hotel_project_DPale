@@ -52,6 +52,7 @@ public class Admin {
             System.out.println("See you soon");
     }
 
+    // Checks option user chose and does the requested function
     public void checkOption(int option) throws Exception{
         if (option == 1) {
             System.out.println("\n");
@@ -65,6 +66,7 @@ public class Admin {
         }
     }
 
+    // Shows available options
     public void showOptions() {
         System.out.println("Choose one of the option:");
         System.out.println("1) Cost - change room cost per night");
@@ -73,6 +75,7 @@ public class Admin {
         System.out.println("4) Exit\n");
     }
 
+    // Lets to change room cost
     public void changeRoomCost() throws Exception{
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -108,6 +111,7 @@ public class Admin {
         }
     }
 
+    // Lets to change room availability for any room that is not occupied
     public void changeRoomAvailability() throws Exception{
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -119,8 +123,8 @@ public class Admin {
                 String room = scanner.nextLine();
                 if (availableRooms.contains(room)) {
                     System.out.println("\nChange availability to:");
-                    System.out.println("1)Available");
-                    System.out.println("2)Unavailable");
+                    System.out.println("1) Available");
+                    System.out.println("2) Unavailable");
                     int answer = 0;
                     answer = Guest.checkInput(1, 2);
                     if (answer == 1) {
@@ -147,6 +151,7 @@ public class Admin {
         System.out.print(ConsoleColors.RESET);
     }
 
+    // Lets to change room discount
     public void changeRoomDiscount() throws Exception{
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
@@ -182,6 +187,7 @@ public class Admin {
         }
     }
 
+    // Changes room cost in rooms.csv
     public static void changeCost(String roomNumber, int cost) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
@@ -203,9 +209,10 @@ public class Admin {
         }
         writer.close(); 
         reader.close();
-        boolean successful = tempFile.renameTo(oldFile);
+        tempFile.renameTo(oldFile);
     }
 
+    // Changes room availability in rooms.csv
     public static void changeAvailability(String roomNumber, String availability) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
@@ -227,9 +234,10 @@ public class Admin {
         }
         writer.close(); 
         reader.close();
-        boolean successful = tempFile.renameTo(oldFile);
+        tempFile.renameTo(oldFile);
     }
 
+    // Prints table of rooms that are available or unavailable
     public static ArrayList<String> searchAvailable() throws Exception{
         HashMap<String, Room> roomList = Room.getRoomsList();
         ArrayList<String> availableRooms = new ArrayList<>();
@@ -251,6 +259,7 @@ public class Admin {
         return availableRooms;
     }
 
+    // Changes room discount in rooms.csv
     public static void changeDiscount(String roomNumber, int discount) throws Exception{
         File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
         File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
@@ -275,6 +284,7 @@ public class Admin {
         boolean successful = tempFile.renameTo(oldFile);
     }
 
+    // Prints table of rooms
     public static void printRooms() throws Exception{
         HashMap<String, Room> rooms = Room.getRoomsList();
         System.out.print(ConsoleColors.BLUE);
