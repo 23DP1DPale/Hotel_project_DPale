@@ -81,10 +81,10 @@ public class Guest {
     // Shows available options
     public void showOptions() {
         System.out.println("Choose one of the option:");
-        System.out.println("1) Book - book a room for a certain time period");
+        System.out.println("1) Book - book a room for a certain period of time");
         System.out.println("2) Search and filter");
         System.out.println("3) Balance - check your balance or deposit money");
-        System.out.println("4) See your booked rooms");
+        System.out.println("4) View your booked rooms");
         System.out.println("5) Exit\n");
     }
 
@@ -110,7 +110,7 @@ public class Guest {
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
         Room.printRooms();
-        System.out.println("\nEnter a room number to book it");
+        System.out.println("\nEnter the room number you'd like to book");
         System.out.println();
         String answer = "0";
         answer = String.valueOf(checkInput(1, 10));
@@ -139,7 +139,7 @@ public class Guest {
                 } else {
                     app.clearScreen();
                     System.out.print(ConsoleColors.RED);
-                    System.out.println("\nYou don't have enough money");
+                    System.out.println("You don't have enough money");
                     System.out.print(ConsoleColors.RESET);
                     success = false;
                 }
@@ -162,7 +162,7 @@ public class Guest {
             app.clearScreen();
             Room.updateRoom(answer, guest);
             System.out.print(ConsoleColors.GREEN);
-            System.out.println("Successfuly booked a room");
+            System.out.println("Successfully booked the room");
             System.out.print(ConsoleColors.RESET);
         }
     }
@@ -360,10 +360,40 @@ public class Guest {
     public void checkBookedRooms(Guest guest) throws Exception{
         Scanner scanner = new Scanner(System.in);
         app.clearScreen();
-        Booking.searchBooked(guest);
-        System.out.println("1) Exit\n");
-        int input = 0;
-        input = checkInput(1, 1);
+        while (true) {
+            Booking.searchBooked(guest);
+            System.out.println("1) Cancel booking");
+            System.out.println("2) Exit\n");
+            int input = 0;
+            if ((input = checkInput(1, 2)) == 1) {
+                ArrayList<String> yourBooks = Booking.yourBookedRooms(guest);
+                while (true) {
+                    try {
+                        System.out.println("\nEnter the room number of the booking to cancel it");
+                        System.out.print("Input: ");
+                        String room = scanner.nextLine();
+                        if (yourBooks.contains(room)) {
+                            app.clearScreen();
+                            Room.removeBookedRoom(String.valueOf(room));
+                            Booking.deleteBook(room);
+                            break;
+                        } else {
+                            app.clearScreen();
+                            System.out.print(ConsoleColors.RED);
+                            System.out.println("There is no such booking");
+                            System.out.println(ConsoleColors.RESET);
+                            break;
+                        }
+                    } catch (Exception e) {
+                        System.out.print(ConsoleColors.RED);
+                        System.out.println("Incorrect input, try again");
+                        System.out.print(ConsoleColors.RESET);
+                    }
+                }
+            } else {
+                break;
+            }
+        } 
         app.clearScreen();
     }
 

@@ -7,7 +7,6 @@ import org.junit.Test;
 public class BookingTest {
     @Test
     public void testBookCost() throws Exception {
-        Room room1 = new Room(null, null, 0, 0, 0, null, null, null);
         Booking book1 = new Booking(null, "3", 3, null);
         assertTrue(book1.getTotalCost() == 690);
         

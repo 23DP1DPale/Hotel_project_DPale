@@ -1,13 +1,14 @@
 # Hotel Reservation System
 
 Hotel is a program which allows users to interact with hotel as a guest or an administrator.
-The administrator is able to manage room reservations, availability, prices. The guest can book rooms according to his needs.
+The administrator is able to manage room reservations, availability and prices. The guest can book rooms according to his needs.
 
 ### Interface
 
 The main menu lets you to choose one of the roles: admin or guest.
 
 #### Guest
+
 For Guest is shown a table of rooms in hotel like this:
 
 ================================================================================
@@ -26,7 +27,7 @@ Discount - discount for a room (%)
 Availability - state of a room (available, unavailable, occupied)
 
 
-Below table there are options: Book, Search and filter, Balance, see your booked rooms and exit.
+Below table there are options: Book, Search and filter, Balance, View your booked rooms and Exit.
 
 
 #### Admin
@@ -56,10 +57,10 @@ Below the table is shown these options: Cost, Availability, Discount, Exit.
 
 #### Guest
 
-By choosing option **Book** it lets you input number of a room you would like to book. After that it asks for amount of nights to book the room. After book you are moved to main menu.
+By choosing option **Book** it lets you input number of the room you would like to book. Then, you will be asked to enter amount of nights for booking. After booking the room, you will be returned to the main menu.
 
 
-Choosing **Rooms** gives these options: Sort, Search and exit.
+**Rooms** option gives these options: Sort, Search and exit.
 
 **Sort** option lets you to sort list of rooms by cost and size. Then you can choose how exactly to sort: from the lowest value to the most, and the other way around. After that it outputs a sorted table.
 
@@ -68,11 +69,13 @@ Choosing **Rooms** gives these options: Sort, Search and exit.
 **Exit** returns you to main menu.
 
 
-Choosing **Balance** option programm will show your balance and 3 options: deposit, withdraw, exit.
-Deposit lets you to add money to your balance. Withdraw lets you take out your money from balance. Exit returns you to main menu.
+**Balance** option will show your balance and 3 options: deposit, withdraw, exit.
+Deposit lets you to add money to your balance.
+Withdraw lets you take out your money from balance.
+Exit returns you to main menu.
 
 
-Choosing option **See your booked rooms** program outputs a table with your booked rooms:
+Choosing option **View your booked rooms** program outputs a table with your bookings:
 
 =========================================
 Room   type   size   nights   total cost
@@ -88,7 +91,7 @@ Size - size of room (m²)
 Nights - amount of nights to stay
 Total cost - cost of book (EUR)
 
-If you don't have any booked rooms, then program will output "**You don't have any booked rooms yet**".
+If you don't have any booked rooms, then program will output "**No rooms booked**".
 
 
 Choosing option **Exit** makes program to end.

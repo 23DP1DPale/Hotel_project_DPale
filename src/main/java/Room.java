@@ -127,6 +127,33 @@ public class Room {
         writer.close(); 
         reader.close();
     }
+
+    public static void removeBookedRoom(String roomNumber) throws Exception{
+        File oldFile = new File("/workspaces/Hotel_project_DPale/data/rooms.csv");
+        File tempFile = new File("/workspaces/Hotel_project_DPale/data/temprooms.csv");
+        tempFile.createNewFile();
+        BufferedReader reader = Helper.gerReader("rooms.csv");
+        BufferedWriter writer =
+
+        Helper.getWriter("temprooms.csv", StandardOpenOption.APPEND);
+        HashMap<String, Room> roomsList = getRoomsList();
+        String linetoupdate = roomsList.get(roomNumber).roomsToCsvRow();
+        
+        String currentLine;
+
+        while((currentLine = reader.readLine()) != null) {
+            String trimmedLine = currentLine.trim();
+            if(trimmedLine.equals(linetoupdate)) {
+                writer.write(roomsList.get(roomNumber).roomsToCsvRow("available", "none", "none" + "\n"));
+                continue;
+            }
+            writer.write(currentLine + "\n");
+        }
+        tempFile.renameTo(oldFile);
+
+        writer.close(); 
+        reader.close();
+    }
     
     // Print table of rooms sorted from most expensive to cheapest
     public static void sortByHighestCost() throws Exception{

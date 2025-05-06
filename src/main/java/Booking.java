@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,6 +164,36 @@ public class Booking {
         return bookList;
     }
 
+    public static void deleteBook(String roomNumber) throws Exception{
+        File oldFile = new File("/workspaces/Hotel_project_DPale/data/book.csv");
+        File tempFile = new File("/workspaces/Hotel_project_DPale/data/tempbook.csv");
+        tempFile.createNewFile();
+        BufferedReader reader = Helper.gerReader("book.csv");
+        BufferedWriter writer =
+
+        Helper.getWriter("tempbook.csv", StandardOpenOption.APPEND);
+        ArrayList<Booking> bookList = getBooks();
+        String linetoremove = null;
+        for (Booking book: bookList) {
+            if (book.getRoom().equals(roomNumber)) {
+                linetoremove = bookToCsvRow(book);
+            }
+        }
+        
+        String currentLine;
+
+        while ((currentLine = reader.readLine()) != null) {
+            if (currentLine.equals(linetoremove)) {
+                continue;
+            }
+            writer.write(currentLine + "\n");
+        }
+        tempFile.renameTo(oldFile);
+
+        writer.close(); 
+        reader.close();
+    }
+
     // Searches users booked rooms
     public static void searchBooked(Guest guest) throws Exception{
         ArrayList<Booking> books = getBooks();
@@ -173,9 +204,11 @@ public class Booking {
             }
         }
         if (bookedRoomCount == 0) {
-            System.out.println("You don't have any booked rooms yet\n");
+            System.out.print(ConsoleColors.RED);
+            System.out.println("No rooms booked\n");
+            System.out.print(ConsoleColors.RESET);
         } else {
-            System.out.println("Booked rooms");
+            System.out.println("Bookings");
             System.out.print(ConsoleColors.BLUE);
             System.out.println("=".repeat(58));
             System.out.print(ConsoleColors.RESET);
@@ -191,6 +224,17 @@ public class Booking {
             }
             System.out.println();
         }
+    }
+
+    public static ArrayList<String> yourBookedRooms(Guest guest) throws Exception{
+        ArrayList<Booking> books = getBooks();
+        ArrayList<String> yourBooks = new ArrayList<>();
+        for (Booking book: books) {
+            if (book.getGuestName().equals(guest.getName()) && book.getGuestPassword().equals(guest.getPassword())) {
+                yourBooks.add(book.getRoom());
+            }
+        }
+        return yourBooks;
     }
 
     public void showBookedRooms() {
