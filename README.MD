@@ -93,6 +93,8 @@ Total cost - cost of book (EUR)
 
 If you don't have any booked rooms, then program will output "**No rooms booked**".
 
+Program then gives option to **Cancel booking** which will cancel your specific booking.
+
 
 Choosing option **Exit** makes program to end.
 
